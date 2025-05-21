@@ -7,7 +7,7 @@ function App() {
     <>
       <Header />
       <main style={{ paddingTop: '70px' }}>
-        {/* {<Home></Home>} */}
+        {<Home></Home>}
         {<CreateStayForm></CreateStayForm>}
       </main>
     </>

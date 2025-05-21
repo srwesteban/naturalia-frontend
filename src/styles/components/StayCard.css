@@ -1,0 +1,41 @@
+.stay-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 350px;
+}
+
+.stay-card:hover {
+  transform: scale(1.02);
+}
+
+.stay-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.stay-info {
+  padding: 1rem;
+}
+
+.stay-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.stay-info p {
+  margin: 0.4rem 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.stay-info span {
+  font-weight: 600;
+  color: #2e2e2e;
+}
