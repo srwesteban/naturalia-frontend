@@ -8,12 +8,12 @@ const Header = () => {
       <div className="header-left">
         <Link to="/" className="logo-link">
           <img src={logo} alt="Naturalia logo" className="logo" />
-          <span className="slogan">Naturalia — Glamping & Escapadas</span>
         </Link>
+          <span className="slogan">Glamppings y Alojamientos Campestres - Reencuentrate con la naturaleza</span>
       </div>
       <div className="header-right">
-        <button className="btn-outline">Crear cuenta</button>
         <button className="btn-primary">Iniciar sesión</button>
+        <button className="btn-outline">Crear cuenta</button>
       </div>
     </header>
   );

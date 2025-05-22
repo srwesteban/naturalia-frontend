@@ -15,3 +15,9 @@ export const createStay = async (stayData) => {
   if (!response.ok) throw new Error('Error al crear stay');
   return response.json();
 };
+
+export const getStayById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`);
+  if (!response.ok) throw new Error('Stay no encontrado');
+  return response.json();
+};
