@@ -1,0 +1,42 @@
+.stay-list-section {
+  padding: 1rem 0;
+}
+.stay-list-section h2 {
+  margin: 10px 0;
+}
+
+.stay-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #2e2e2e;
+  color: white;
+  font-weight: 500;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: default;
+}
+@media (max-width: 768px) {
+  .stay-list-grid {
+    grid-template-columns: 1fr;
+  }
+}

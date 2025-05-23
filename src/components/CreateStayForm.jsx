@@ -1,35 +1,32 @@
-import React, { useState } from 'react';
-import '../styles/components/CreateStayForm.css';
-import { uploadImageToCloudinary } from '../services/cloudinary';
-import { createStay } from '../services/stayService';
+import React, { useState } from "react";
+import "../styles/components/CreateStayForm.css";
+import { uploadImageToCloudinary } from "../services/cloudinary";
+import { createStay } from "../services/stayService";
 
 const initialForm = {
-  name: '',
-  description: '',
-  location: '',
+  name: "",
+  description: "",
+  location: "",
   capacity: 1,
   pricePerNight: 0,
-  type: 'GLAMPING',
-  images: [],          // URLs que enviaremos al backend
+  type: "GLAMPING",
+  images: [],
 };
 
 const CreateStayForm = () => {
   const [form, setForm] = useState(initialForm);
-  const [files, setFiles] = useState([]);         // archivos locales
+  const [files, setFiles] = useState([]); // archivos locales
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
-  // Maneja inputs de texto / número
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Maneja carga de archivos
   const handleFileChange = (e) => {
-    setFiles([...e.target.files]);     // múltiples imágenes
+    setFiles([...e.target.files]);
   };
 
-  // Sube todos los archivos a Cloudinary y devuelve un array de URLs
   const uploadAllImages = async () => {
     const urls = [];
     for (const file of files) {
@@ -42,24 +39,42 @@ const CreateStayForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMsg('');
-    setSuccessMsg('');
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    // ⚠️ Validación de imágenes
+    if (files.length < 1 || files.length > 5) {
+      setErrorMsg("Debes subir entre 1 y 5 imágenes.");
+      setLoading(false);
+      return;
+    }
 
     try {
-      // 1. Subir imágenes y obtener URLs públicas
       const imageUrls = await uploadAllImages();
-
-      // 2. Armar payload
       const payload = { ...form, images: imageUrls };
+      const response = await fetch("http://localhost:8080/stays", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-      // 3. Enviar al backend
-      await createStay(payload);
+      if (!response.ok) {
+        const msg = await response.text();
+        if (msg === "DUPLICATE_NAME") {
+          setErrorMsg("Ya existe un alojamiento con ese nombre.");
+        } else {
+          setErrorMsg("Ocurrió un error inesperado. Intenta de nuevo.");
+        }
+        return;
+      }
 
-      setSuccessMsg('¡Alojamiento creado con éxito!');
+      setSuccessMsg("¡Alojamiento creado con éxito!");
       setForm(initialForm);
       setFiles([]);
     } catch (err) {
-      setErrorMsg(err.message || 'Error al crear el alojamiento');
+      setErrorMsg("Error de red o del servidor.");
     } finally {
       setLoading(false);
     }
@@ -74,12 +89,7 @@ const CreateStayForm = () => {
 
       <form onSubmit={handleSubmit}>
         <label>Nombre*</label>
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
+        <input name="name" value={form.name} onChange={handleChange} required />
 
         <label>Descripción</label>
         <textarea
@@ -90,11 +100,7 @@ const CreateStayForm = () => {
         />
 
         <label>Ubicación</label>
-        <input
-          name="location"
-          value={form.location}
-          onChange={handleChange}
-        />
+        <input name="location" value={form.location} onChange={handleChange} />
 
         <div className="inline">
           <div>
@@ -125,7 +131,7 @@ const CreateStayForm = () => {
           <option value="COUNTRY_HOUSE">Casa Campestre</option>
         </select>
 
-        <label>Imágenes (máx 4)</label>
+        <label>Imágenes (min 1, máx 5)</label>
         <input
           type="file"
           accept="image/*"
@@ -134,7 +140,7 @@ const CreateStayForm = () => {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? 'Subiendo…' : 'Agregar producto'}
+          {loading ? "Subiendo…" : "Agregar producto"}
         </button>
       </form>
     </section>

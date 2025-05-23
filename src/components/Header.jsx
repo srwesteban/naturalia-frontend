@@ -5,7 +5,8 @@ import  logo  from '../assets/Logo.png';
 const Header = () => {
   return (
     <header className="header">
-      <div className="header-left">
+      <div className='header-content'>
+        <div className="header-left">
         <Link to="/" className="logo-link">
           <img src={logo} alt="Naturalia logo" className="logo" />
         </Link>
@@ -14,6 +15,7 @@ const Header = () => {
       <div className="header-right">
         <button className="btn-primary">Iniciar sesión</button>
         <button className="btn-outline">Crear cuenta</button>
+      </div>
       </div>
     </header>
   );

@@ -1,13 +1,15 @@
 .stay-detail {
+  height: 100%;
   padding: 100px 2rem 2rem;
-  max-width: 900px;
+  max-width: 1200px;
+  max-height: 2000px;
   margin: 0 auto;
 }
 
 .detail-header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 1.5rem;
 }
 

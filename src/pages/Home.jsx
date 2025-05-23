@@ -1,14 +1,19 @@
-import React from 'react';
-import SearchBar from '../components/SearchBar';
-import CategoryList from '../components/CategoryList'
-import StayRecommendations from '../components/StayRecommendatios'
+import React from "react";
+import SearchBar from "../components/SearchBar";
+import CategoryList from "../components/CategoryList";
+import StayRecommendations from "../components/StayRecommendatios";
+import StayListSection from "../components/StayListSection";
+import "../styles/pages/Home.css";
 
 const Home = () => {
   return (
     <main className="home">
-      <SearchBar />
-      <CategoryList />
-      <StayRecommendations />
+      <div className="home-content">
+        <SearchBar />
+        <CategoryList />
+        <StayRecommendations />
+        <StayListSection />
+      </div>
     </main>
   );
 };

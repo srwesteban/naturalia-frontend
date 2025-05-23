@@ -1,0 +1,29 @@
+.table-container {
+  margin-top: 2rem;
+  overflow-x: auto;
+}
+
+.stay-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.stay-table th,
+.stay-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.stay-table th {
+  background-color: #f4f4f4;
+}
+
+.actions button {
+  margin-right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}

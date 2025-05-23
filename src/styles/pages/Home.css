@@ -1,13 +1,20 @@
 .home {
+  display: flex;
+  width: 100%;
   min-height: 100vh;
   background: linear-gradient(to bottom, #f9f9f9, #ffffff);
-  padding: 100px 2rem 2rem;
+  padding: 0;
+}
+.home-content {
+  margin: 120px 10%;
+  max-width: 1800px;
+  padding: 0 2rem;
+  width: 100%;
 }
 
 .search-section {
   display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
+  padding: 1%;
 }
 
 .search-input {
@@ -17,6 +24,7 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
+  margin: auto;
 }
 
 .categories {
@@ -36,6 +44,7 @@
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  margin: 10px 0px;
 }
 
 .recommendations {

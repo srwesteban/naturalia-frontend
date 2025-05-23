@@ -21,3 +21,16 @@ export const getStayById = async (id) => {
   if (!response.ok) throw new Error('Stay no encontrado');
   return response.json();
 };
+
+export const getStaySummaries = async () => {
+  const response = await fetch(`${API_BASE_URL}/summary`);
+  if (!response.ok) throw new Error('Error al obtener los stays');
+  return response.json(); // [{id, name}]
+};
+
+export const deleteStayById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) throw new Error('Error al eliminar stay');
+};
