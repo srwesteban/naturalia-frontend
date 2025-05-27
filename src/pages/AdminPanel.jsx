@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../styles/pages/AdminPanel.css";
-import { getStaySummaries, deleteStayById } from "../services/stayService";
-import StayTable from "../components/StayTable";
+import { getStaySummaries, deleteStayById, updateStay } from "../services/stayService";
+import StayTable from "../components/stays/StayTable";
 import { useNavigate } from "react-router-dom";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 const AdminPanel = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [stays, setStays] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [stayToDelete, setStayToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +26,10 @@ const AdminPanel = () => {
     const fetchStays = async () => {
       try {
         const data = await getStaySummaries();
-        setStays(data.map(({ id, name }) => ({ id, name }))); // Simplificado
+        // ⚠️ Asegúrate de que el backend incluya "type" en el DTO
+        setStays(data.map(({ id, name, type }) => ({ id, name, type })));
       } catch (err) {
-        console.error(err.message);
+        console.error("Error al cargar stays:", err.message);
       }
     };
 
@@ -35,22 +38,8 @@ const AdminPanel = () => {
 
   const handleEdit = (id) => {
     alert(`Editar stay con ID: ${id}`);
-    // Podrías usar navigate(`/editar/${id}`) en el futuro
+    // O usa navigate(`/editar/${id}`) si tienes esa ruta
   };
-
-  if (isMobile) {
-    return (
-      <div className="admin-panel">
-        <h2>Panel de Administración</h2>
-        <p className="mobile-warning">
-          Esta sección no está disponible desde móvil o tablet.
-        </p>
-      </div>
-    );
-  }
-
-  const [showModal, setShowModal] = useState(false);
-  const [stayToDelete, setStayToDelete] = useState(null);
 
   const handleDelete = (id) => {
     const stay = stays.find((s) => s.id === id);
@@ -70,13 +59,41 @@ const AdminPanel = () => {
     }
   };
 
+  const handleChangeType = async (id, newType) => {
+    try {
+      const stay = stays.find((s) => s.id === id);
+      await updateStay(id, { ...stay, type: newType });
+      setStays((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, type: newType } : s))
+      );
+    } catch (err) {
+      console.error("Error al cambiar tipo:", err);
+    }
+  };
+
+  if (isMobile) {
+    return (
+      <div className="admin-panel">
+        <h2>Panel de Administración</h2>
+        <p className="mobile-warning">
+          Esta sección no está disponible desde móvil o tablet.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-panel">
       <h2>Panel de Administración</h2>
       <button onClick={() => navigate("/create")} className="add-btn">
         ➕ Agregar producto
       </button>
-      <StayTable stays={stays} onEdit={handleEdit} onDelete={handleDelete} />
+      <StayTable
+        stays={stays}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onChangeType={handleChangeType}
+      />
       {showModal && (
         <ConfirmDeleteModal
           stayName={stayToDelete?.name}

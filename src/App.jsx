@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import CreateStayForm from "./components/CreateStayForm";
 import StayDetail from "./pages/StayDetail";
@@ -7,7 +7,8 @@ import Footer from "./components/Footer";
 import AdminPanel from "./pages/AdminPanel";
 import RegisterForm from "./components/auth/RegisterForm";
 import LoginForm from "./components/auth/LoginForm";
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import UserPanel from "./components/users/UserPanel";
 
 function App() {
   return (
@@ -21,12 +22,19 @@ function App() {
           <Route path="/create" element={<CreateStayForm />} />
           <Route path="/stays/:id" element={<StayDetail />} />
           <Route
-            path="/administracion"
+            path="/adminstay"
             element={
               <ProtectedRoute roles={["ADMIN"]}>
                 <AdminPanel />
               </ProtectedRoute>
             }
+          />{" "}
+          <Route path="/adminuser" element=
+          {
+            <ProtectedRoute roles={["ADMIN"]}>
+              <UserPanel />
+            </ProtectedRoute>
+          }
           />{" "}
           <Route path="registry" element={<RegisterForm />} />
           <Route path="login" element={<LoginForm />} />
