@@ -1,36 +1,54 @@
-const API_BASE_URL = 'http://localhost:8080/stays'; // o tu URL deploy
+const API_BASE_URL = 'http://localhost:8080'; 
+
+const getAuthToken = () => localStorage.getItem('token');
+
+const authFetch = async (url, options = {}) => {
+  const token = getAuthToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const response = await fetch(url, { ...options, headers });
+  if (!response.ok) {
+    const text = await response.text().catch(() => null);
+    throw new Error(text || `Error ${response.status}`);
+  }
+  return response;
+};
 
 export const getAllStays = async () => {
-  const response = await fetch(API_BASE_URL);
-  if (!response.ok) throw new Error('Error al cargar stays');
+  const response = await authFetch(`${API_BASE_URL}/stays`, { method: 'GET' });
   return response.json();
 };
 
 export const createStay = async (stayData) => {
-  const response = await fetch(API_BASE_URL, {
+  const response = await authFetch(`${API_BASE_URL}/stays`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(stayData),
   });
-  if (!response.ok) throw new Error('Error al crear stay');
   return response.json();
 };
 
 export const getStayById = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`);
-  if (!response.ok) throw new Error('Stay no encontrado');
+  const response = await authFetch(`${API_BASE_URL}/stays/${id}`, { method: 'GET' });
   return response.json();
 };
 
 export const getStaySummaries = async () => {
-  const response = await fetch(`${API_BASE_URL}/summary`);
-  if (!response.ok) throw new Error('Error al obtener los stays');
-  return response.json(); // [{id, name}]
+  const response = await authFetch(`${API_BASE_URL}/stays/summary`, { method: 'GET' });
+  return response.json();
+};
+
+export const updateStay = async (id, stayData) => {
+  const response = await authFetch(`${API_BASE_URL}/stays/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(stayData),
+  });
+  return response.json();
 };
 
 export const deleteStayById = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: 'DELETE',
-  });
-  if (!response.ok) throw new Error('Error al eliminar stay');
+  await authFetch(`${API_BASE_URL}/stays/${id}`, { method: 'DELETE' });
 };
