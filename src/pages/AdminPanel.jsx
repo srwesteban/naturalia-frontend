@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../styles/pages/AdminPanel.css";
-import { getStaySummaries, deleteStayById, updateStay } from "../services/stayService";
+import { getStaySummaries, deleteStayById, updateStay, getStayById } from "../services/stayService";
 import StayTable from "../components/stays/StayTable";
-import { useNavigate } from "react-router-dom";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import EditStayModal from "../components/stays/EditStayModal";
+import { useNavigate } from "react-router-dom";
+
 
 const AdminPanel = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [stays, setStays] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [stayToDelete, setStayToDelete] = useState(null);
+  const [stayToEdit, setStayToEdit] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +29,7 @@ const AdminPanel = () => {
     const fetchStays = async () => {
       try {
         const data = await getStaySummaries();
-        // ⚠️ Asegúrate de que el backend incluya "type" en el DTO
-        setStays(data.map(({ id, name, type }) => ({ id, name, type })));
+        setStays(data);
       } catch (err) {
         console.error("Error al cargar stays:", err.message);
       }
@@ -36,9 +38,14 @@ const AdminPanel = () => {
     fetchStays();
   }, []);
 
-  const handleEdit = (id) => {
-    alert(`Editar stay con ID: ${id}`);
-    // O usa navigate(`/editar/${id}`) si tienes esa ruta
+  const handleEdit = async (id) => {
+    try {
+      const detailedStay = await getStayById(id);
+      if (!detailedStay.images) detailedStay.images = [];
+      setStayToEdit(detailedStay);
+    } catch (err) {
+      console.error("Error al cargar detalles del stay:", err);
+    }
   };
 
   const handleDelete = (id) => {
@@ -71,6 +78,18 @@ const AdminPanel = () => {
     }
   };
 
+  const handleSaveEdit = async (updatedStay) => {
+    try {
+      await updateStay(stayToEdit.id, updatedStay);
+      setStays((prev) =>
+        prev.map((s) => (s.id === stayToEdit.id ? { ...s, ...updatedStay } : s))
+      );
+      setStayToEdit(null);
+    } catch (err) {
+      console.error("Error al guardar cambios:", err);
+    }
+  };
+
   if (isMobile) {
     return (
       <div className="admin-panel">
@@ -99,6 +118,15 @@ const AdminPanel = () => {
           stayName={stayToDelete?.name}
           onClose={() => setShowModal(false)}
           onConfirm={confirmDelete}
+        />
+      )}
+      {stayToEdit && (
+        <EditStayModal
+          stayId={stayToEdit.id}
+          initialData={stayToEdit}
+          onClose={() => setStayToEdit(null)}
+          onSave={handleSaveEdit}
+          maxImages={5} // pasamos límite de imágenes
         />
       )}
     </div>
