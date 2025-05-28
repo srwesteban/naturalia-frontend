@@ -1,17 +1,16 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
-import CategoryList from "../components/CategoryList";
+import CategoryFilter from "../components/CategoryFilter";
 import StayRecommendations from "../components/StayRecommendatios";
-import StayListSection from "../components/StayListSection";
+import StayListSection from "../components/stays/StayListSection";
 import "../styles/pages/Home.css";
 
 const Home = () => {
   return (
     <main className="home">
       <div className="home-content">
-        <SearchBar />
-        <CategoryList />
-        <StayRecommendations />
+        {/* <SearchBar /> */}
+        {/* <StayRecommendations /> */}
         <StayListSection />
       </div>
     </main>

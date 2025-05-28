@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllStays } from '../services/stayService';
-import StayCard from './StayCard';
+import StayCard from './stays/StayCard';
 import '../styles/components/StayRecommendations.css';
 
 const StayRecommendations = () => {

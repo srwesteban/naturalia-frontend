@@ -6,7 +6,6 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import EditStayModal from "../components/stays/EditStayModal";
 import { useNavigate } from "react-router-dom";
 
-
 const AdminPanel = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [stays, setStays] = useState([]);
@@ -41,7 +40,6 @@ const AdminPanel = () => {
   const handleEdit = async (id) => {
     try {
       const detailedStay = await getStayById(id);
-      if (!detailedStay.images) detailedStay.images = [];
       setStayToEdit(detailedStay);
     } catch (err) {
       console.error("Error al cargar detalles del stay:", err);
@@ -78,11 +76,12 @@ const AdminPanel = () => {
     }
   };
 
-  const handleSaveEdit = async (updatedStay) => {
+  // Ajuste: Alineamos la firma con EditStayModal
+  const handleSaveEdit = async (id, updatedStay) => {
     try {
-      await updateStay(stayToEdit.id, updatedStay);
+      await updateStay(id, updatedStay);
       setStays((prev) =>
-        prev.map((s) => (s.id === stayToEdit.id ? { ...s, ...updatedStay } : s))
+        prev.map((s) => (s.id === id ? { ...s, ...updatedStay } : s))
       );
       setStayToEdit(null);
     } catch (err) {
@@ -126,7 +125,6 @@ const AdminPanel = () => {
           initialData={stayToEdit}
           onClose={() => setStayToEdit(null)}
           onSave={handleSaveEdit}
-          maxImages={5} // pasamos límite de imágenes
         />
       )}
     </div>

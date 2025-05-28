@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/components/CreateStayForm.css";
 import { uploadImageToCloudinary } from "../services/cloudinary";
-import { createStay } from "../services/stayService";
+import { getFeatures } from "../services/featureService";
 
 const initialForm = {
   name: "",
@@ -15,16 +15,30 @@ const initialForm = {
 
 const CreateStayForm = () => {
   const [form, setForm] = useState(initialForm);
-  const [files, setFiles] = useState([]); // archivos locales
+  const [files, setFiles] = useState([]);
+  const [features, setFeatures] = useState([]);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+
+  useEffect(() => {
+    getFeatures()
+      .then(setFeatures)
+      .catch((err) => console.error("Error cargando características:", err));
+  }, []);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
+  };
+
+  const toggleFeature = (id) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
   };
 
   const uploadAllImages = async () => {
@@ -42,7 +56,6 @@ const CreateStayForm = () => {
     setErrorMsg("");
     setSuccessMsg("");
 
-    // ⚠️ Validación de imágenes
     if (files.length < 1 || files.length > 5) {
       setErrorMsg("Debes subir entre 1 y 5 imágenes.");
       setLoading(false);
@@ -51,11 +64,17 @@ const CreateStayForm = () => {
 
     try {
       const imageUrls = await uploadAllImages();
-      const payload = { ...form, images: imageUrls };
+      const payload = {
+        ...form,
+        images: imageUrls,
+        featureIds: selectedFeatures,
+      };
+
       const response = await fetch("http://localhost:8080/stays", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(payload),
       });
@@ -73,6 +92,7 @@ const CreateStayForm = () => {
       setSuccessMsg("¡Alojamiento creado con éxito!");
       setForm(initialForm);
       setFiles([]);
+      setSelectedFeatures([]);
     } catch (err) {
       setErrorMsg("Error de red o del servidor.");
     } finally {
@@ -139,8 +159,24 @@ const CreateStayForm = () => {
           onChange={handleFileChange}
         />
 
+        <label>Características</label>
+        <div className="features-checkboxes">
+          {features.map((f) => (
+            <div key={f.id} className="feature-item">
+              <input
+                type="checkbox"
+                checked={selectedFeatures.includes(f.id)}
+                onChange={() => toggleFeature(f.id)}
+              />
+              <div className="feature-label">
+                <i className={`fa ${f.icon}`}></i> {f.name}
+              </div>
+            </div>
+          ))}
+        </div>
+
         <button type="submit" disabled={loading}>
-          {loading ? "Subiendo…" : "Agregar producto"}
+          {loading ? "Subiendo…" : "Agregar Alojamiento"}
         </button>
       </form>
     </section>

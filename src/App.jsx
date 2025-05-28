@@ -3,12 +3,13 @@ import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import CreateStayForm from "./components/CreateStayForm";
 import StayDetail from "./pages/StayDetail";
-import Footer from "./components/Footer";
+import Footer from "./components/layout/Footer";
 import AdminPanel from "./pages/AdminPanel";
 import RegisterForm from "./components/auth/RegisterForm";
 import LoginForm from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserPanel from "./components/users/UserPanel";
+import AdminFeaturesPage from "./pages/AdminFeaturesPage";
 
 function App() {
   return (
@@ -36,6 +37,8 @@ function App() {
             </ProtectedRoute>
           }
           />{" "}
+          <Route path="adminfeatures" element={<AdminFeaturesPage />} />
+
           <Route path="registry" element={<RegisterForm />} />
           <Route path="login" element={<LoginForm />} />
         </Routes>
