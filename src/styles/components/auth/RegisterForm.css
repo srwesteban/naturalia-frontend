@@ -1,0 +1,42 @@
+.register-form input,
+.register-form select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid var(--color-accent);
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+
+.register-form button {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.register-form button:hover {
+  background-color: var(--color-accent);
+}
+
+.register-form h2 {
+  color: var(--color-primary);
+}
+
+.register-form .error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.register-form .success {
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+

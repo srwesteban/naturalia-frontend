@@ -16,6 +16,7 @@ export const useAuth = () => {
         const decoded = jwtDecode(token);
         console.log("🔐 Token decodificado:", decoded);
         setUser({
+          id: decoded.id,
           name: decoded.firstname || decoded.sub,
           email: decoded.email,
           role: decoded.role,

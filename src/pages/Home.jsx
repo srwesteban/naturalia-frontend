@@ -1,6 +1,5 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
-import CategoryFilter from "../components/CategoryFilter";
 import StayRecommendations from "../components/StayRecommendatios";
 import StayListSection from "../components/stays/StayListSection";
 import "../styles/pages/Home.css";

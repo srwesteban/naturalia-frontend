@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { registerUser } from '../../services/authService';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import '../../styles/components/auth/RegisterForm.css';
 
 const initialForm = {
   firstname: '',
   lastname: '',
   email: '',
-  password: ''
+  password: '',
+  documentType: '',
+  documentNumber: '',
+  phoneNumber: '',
 };
 
 const RegisterForm = () => {
@@ -19,7 +25,15 @@ const RegisterForm = () => {
   };
 
   const validateFields = () => {
-    if (!form.firstname || !form.lastname || !form.email || !form.password) {
+    if (
+      !form.firstname ||
+      !form.lastname ||
+      !form.email ||
+      !form.password ||
+      !form.documentType ||
+      !form.documentNumber ||
+      !form.phoneNumber
+    ) {
       return 'Todos los campos son obligatorios';
     }
     if (!form.email.includes('@')) {
@@ -44,7 +58,11 @@ const RegisterForm = () => {
 
     setLoading(true);
     try {
-      await registerUser(form);
+      const payload = {
+        ...form,
+        phoneNumber: `+${form.phoneNumber.replace(/\D/g, '')}`,
+      };
+      await registerUser(payload);
       setSuccessMsg('Registro exitoso. Ahora puedes iniciar sesión.');
       setForm(initialForm);
     } catch (err) {
@@ -55,8 +73,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <section className="register-form">
-      <h2>Crear cuenta</h2>
+    <section className="register-form" style={{ maxWidth: '400px', margin: '0 auto' }}>
+      <h2 style={{ textAlign: 'center' }}>Crear cuenta</h2>
 
       {errorMsg && <p className="error">{errorMsg}</p>}
       {successMsg && <p className="success">{successMsg}</p>}
@@ -94,7 +112,41 @@ const RegisterForm = () => {
           onChange={handleChange}
         />
 
-        <button type="submit" disabled={loading}>
+        <select
+          className="documentType"
+          name="documentType"
+          value={form.documentType}
+          onChange={handleChange}
+        >
+          <option value="">Tipo de documento</option>
+          <option value="CC">Cédula de ciudadanía</option>
+          <option value="CE">Cédula de extranjería</option>
+          <option value="PASSPORT">Pasaporte</option>
+        </select>
+
+        <input
+          type="text"
+          name="documentNumber"
+          placeholder="Número de documento"
+          value={form.documentNumber}
+          onChange={handleChange}
+        />
+
+        <PhoneInput
+          country={'co'}
+          value={form.phoneNumber}
+          onChange={(phone) => setForm({ ...form, phoneNumber: phone })}
+          inputProps={{
+            name: 'phoneNumber',
+            required: true,
+          }}
+          inputStyle={{ width: '100%', height: '38px' }}
+          placeholder="Número de teléfono"
+          enableSearch={true}
+          countryCodeEditable={false}
+        />
+
+        <button type="submit" disabled={loading} style={{ marginTop: '16px', width: '100%' }}>
           {loading ? 'Registrando...' : 'Registrarse'}
         </button>
       </form>

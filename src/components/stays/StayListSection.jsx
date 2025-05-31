@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getAllStays } from "../../services/stayService";
+import { getCategories } from "../../services/categoryService";
 import StayListCard from "./StayListCard";
-import CategoryFilter from "../CategoryFilter";
-import "../../styles/components/StayListSection.css";
+import CategoryFilter from "../category/CategoryFilter";
+import "../../styles/components/stays/StayListSection.css";
 
 const StayListSection = () => {
   const [allStays, setAllStays] = useState([]);
   const [filteredStays, setFilteredStays] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -15,14 +17,6 @@ const StayListSection = () => {
     const fetchStays = async () => {
       try {
         const data = await getAllStays();
-        console.log(
-          "✅ Stays fetched:",
-          data.map((s) => ({
-            id: s.id,
-            name: s.name,
-            type: s.type,
-          }))
-        );
         setAllStays(data);
         setFilteredStays(data);
       } catch (err) {
@@ -30,29 +24,28 @@ const StayListSection = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setAllCategories(data);
+      } catch (err) {
+        console.error("❌ Error fetching categories:", err.message);
+      }
+    };
+
     fetchStays();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
-    const filtered =
-      selectedCategories.length > 0
-        ? allStays.filter((stay) => {
-            const stayType =
-              typeof stay.type === "string"
-                ? stay.type.toUpperCase()
-                : stay.type?.name?.toUpperCase?.() || "";
-            const match = selectedCategories.includes(stayType);
-            console.log(
-              `🧪 stay: ${stay.name} | type: ${stayType} | match: ${match}`
-            );
-            return match;
-          })
-        : allStays;
+    const filtered = selectedCategories.length > 0
+      ? allStays.filter((stay) =>
+          stay.categories?.some((cat) =>
+            selectedCategories.includes(cat.title || cat)
+          )
+        )
+      : allStays;
 
-    console.log(
-      "📊 Filtered stays:",
-      filtered.map((s) => s.name)
-    );
     setFilteredStays(filtered);
     setCurrentPage(1);
   }, [selectedCategories, allStays]);
@@ -64,21 +57,31 @@ const StayListSection = () => {
   );
 
   const handleCategoryClick = (category) => {
-    if (category === "ALL") {
-      setSelectedCategories([]);
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(selectedCategories.filter((c) => c !== category));
     } else {
-      setSelectedCategories([category]); // ← reemplaza por esto
+      setSelectedCategories([...selectedCategories, category]);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSelectedCategories([]);
   };
 
   return (
     <section className="stay-list-section">
       <h2>Alojamientos</h2>
+
       <CategoryFilter
+        categories={allCategories}
         selected={selectedCategories}
-        onCategoryClick={handleCategoryClick}
+        onToggle={handleCategoryClick}
+        onClear={handleClearFilters}
       />
-      <p>{filteredStays.length} resultados encontrados</p>
+
+      <p>
+        Mostrando {filteredStays.length} de {allStays.length} resultados
+      </p>
 
       <div className="stay-list-grid">
         {paginated.map((stay) => (

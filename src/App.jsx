@@ -1,22 +1,23 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home";
-import CreateStayForm from "./components/CreateStayForm";
+import CreateStayForm from "./components/stays/CreateStayForm";
 import StayDetail from "./pages/StayDetail";
 import Footer from "./components/layout/Footer";
 import AdminPanel from "./pages/AdminPanel";
 import RegisterForm from "./components/auth/RegisterForm";
 import LoginForm from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import UserPanel from "./components/users/UserPanel";
+import UserPanel from "./components/admin/UserPanel";
 import AdminFeaturesPage from "./pages/AdminFeaturesPage";
+import AdminCategoryPage from "./pages/AdminCategoryPage";
 
 function App() {
   return (
     <>
       <Header />
       <main
-        style={{ flex: 1, minHeight: "100%", margin: "130px", padding: "0" }}
+        style={{ flex: 1, minHeight: "100%", margin: "180px", padding: "0" }}
       >
         <Routes>
           <Route path="/" element={<Home />} />
@@ -30,15 +31,16 @@ function App() {
               </ProtectedRoute>
             }
           />{" "}
-          <Route path="/adminuser" element=
-          {
-            <ProtectedRoute roles={["ADMIN"]}>
-              <UserPanel />
-            </ProtectedRoute>
-          }
+          <Route
+            path="adminuser"
+            element={
+              <ProtectedRoute roles={["ADMIN"]}>
+                <UserPanel />
+              </ProtectedRoute>
+            }
           />{" "}
           <Route path="adminfeatures" element={<AdminFeaturesPage />} />
-
+          <Route path="admincategory" element={<AdminCategoryPage />} />
           <Route path="registry" element={<RegisterForm />} />
           <Route path="login" element={<LoginForm />} />
         </Routes>

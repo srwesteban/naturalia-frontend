@@ -18,3 +18,20 @@ export const assignCategory = async (stayId, categoryId) => {
   if (!resp.ok) throw new Error('Error asignando categoría');
   return resp.json();
 };
+
+export const createCategory = async (categoryData) => {
+  const resp = await fetch(`${API_URL}/categories`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(categoryData),
+  });
+  if (!resp.ok) throw new Error('Error creando la categoría');
+  return resp.json();
+};
+
+export const deleteCategory = async (categoryId) => {
+  const resp = await fetch(`${API_URL}/categories/${categoryId}`, {
+    method: 'DELETE',
+  });
+  if (!resp.ok) throw new Error('Error eliminando la categoría');
+};

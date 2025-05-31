@@ -103,6 +103,7 @@ const AdminPanel = () => {
   return (
     <div className="admin-panel">
       <h2>Panel de Administración</h2>
+
       <button onClick={() => navigate("/create")} className="add-btn">
         ➕ Agregar producto
       </button>

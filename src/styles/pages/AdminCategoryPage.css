@@ -1,0 +1,20 @@
+.admin-category-page {
+  padding: 2rem;
+}
+
+.admin-category-page table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.admin-category-page th,
+.admin-category-page td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.admin-category-page img {
+  border-radius: 8px;
+}

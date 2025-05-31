@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "../styles/components/CreateStayForm.css";
-import { uploadImageToCloudinary } from "../services/cloudinary";
-import { getFeatures } from "../services/featureService";
+import "../../styles/components/CreateStayForm.css";
+import { uploadImageToCloudinary } from "../../services/cloudinary";
+import { getFeatures } from "../../services/featureService";
+import { getCategories } from "../../services/categoryService";
+import { getHosts } from "../../services/userService"; // <-- nuevo
+import { getUserRole } from "../../services/authService"; // <-- nuevo
 
 const initialForm = {
   name: "",
@@ -9,8 +12,13 @@ const initialForm = {
   location: "",
   capacity: 1,
   pricePerNight: 0,
-  type: "GLAMPING",
   images: [],
+  bedrooms: 1,
+  beds: 1,
+  bathrooms: 1,
+  latitude: 0,
+  longitude: 0,
+  hostId: null,
 };
 
 const CreateStayForm = () => {
@@ -18,14 +26,24 @@ const CreateStayForm = () => {
   const [files, setFiles] = useState([]);
   const [features, setFeatures] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [hosts, setHosts] = useState([]);
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    getFeatures()
-      .then(setFeatures)
-      .catch((err) => console.error("Error cargando características:", err));
+    getFeatures().then(setFeatures).catch(console.error);
+    getCategories().then(setCategories).catch(console.error);
+
+    const role = getUserRole(); 
+    setRole(role);
+
+    if (role === "ADMIN") {
+      getHosts().then(setHosts).catch(console.error);
+    }
   }, []);
 
   const handleChange = (e) =>
@@ -38,6 +56,12 @@ const CreateStayForm = () => {
   const toggleFeature = (id) => {
     setSelectedFeatures((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  };
+
+  const toggleCategory = (id) => {
+    setSelectedCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
   };
 
@@ -68,6 +92,7 @@ const CreateStayForm = () => {
         ...form,
         images: imageUrls,
         featureIds: selectedFeatures,
+        categoryIds: selectedCategories,
       };
 
       const response = await fetch("http://localhost:8080/stays", {
@@ -93,6 +118,7 @@ const CreateStayForm = () => {
       setForm(initialForm);
       setFiles([]);
       setSelectedFeatures([]);
+      setSelectedCategories([]);
     } catch (err) {
       setErrorMsg("Error de red o del servidor.");
     } finally {
@@ -145,11 +171,80 @@ const CreateStayForm = () => {
           </div>
         </div>
 
-        <label>Tipo</label>
-        <select name="type" value={form.type} onChange={handleChange}>
-          <option value="GLAMPING">Glamping</option>
-          <option value="COUNTRY_HOUSE">Casa Campestre</option>
-        </select>
+        <div className="inline">
+          <div>
+            <label>Habitaciones</label>
+            <input
+              type="number"
+              name="bedrooms"
+              min="0"
+              value={form.bedrooms}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Camas</label>
+            <input
+              type="number"
+              name="beds"
+              min="0"
+              value={form.beds}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Baños</label>
+            <input
+              type="number"
+              name="bathrooms"
+              min="0"
+              value={form.bathrooms}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="inline">
+          <div>
+            <label>Latitud</label>
+            <input
+              type="number"
+              name="latitude"
+              step="0.0001"
+              value={form.latitude}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Longitud</label>
+            <input
+              type="number"
+              name="longitude"
+              step="0.0001"
+              value={form.longitude}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        {role === "ADMIN" && (
+          <div>
+            <label>Anfitrión</label>
+            <select
+              name="hostId"
+              value={form.hostId || ""}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecciona un anfitrión</option>
+              {hosts.map((host) => (
+                <option key={host.id} value={host.id}>
+                  {host.name} ({host.email})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <label>Imágenes (min 1, máx 5)</label>
         <input
@@ -160,6 +255,7 @@ const CreateStayForm = () => {
         />
 
         <label>Características</label>
+        <h1></h1>
         <div className="features-checkboxes">
           {features.map((f) => (
             <div key={f.id} className="feature-item">
@@ -170,6 +266,28 @@ const CreateStayForm = () => {
               />
               <div className="feature-label">
                 <i className={`fa ${f.icon}`}></i> {f.name}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <label>Categorías</label>
+        <h1></h1>
+        <div className="features-checkboxes">
+          {categories.map((c) => (
+            <div key={c.id} className="feature-item">
+              <input
+                type="checkbox"
+                checked={selectedCategories.includes(c.id)}
+                onChange={() => toggleCategory(c.id)}
+              />
+              <div className="feature-label">
+                {/* <img
+                  src={c.imageUrl}
+                  alt={c.title}
+                  style={{ width: 20, marginRight: 5 }}
+                /> */}
+                {c.title}
               </div>
             </div>
           ))}
