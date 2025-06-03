@@ -13,6 +13,7 @@ import AdminFeaturesPage from "./pages/AdminFeaturesPage";
 import AdminCategoryPage from "./pages/AdminCategoryPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FavoritesPage from "./pages/FavoritesPages";
 
 function App() {
   return (
@@ -40,6 +41,14 @@ function App() {
             element={
               <ProtectedRoute roles={["ADMIN"]}>
                 <UserPanel />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path="favorites"
+            element={
+              <ProtectedRoute roles={["USER"]}>
+                <FavoritesPage />
               </ProtectedRoute>
             }
           />{" "}

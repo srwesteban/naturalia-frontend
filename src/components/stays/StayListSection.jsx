@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllStays, searchStaysByDate } from "../../services/stayService";
+import { getCategories } from "../../services/categoryService";
 import StayListCard from "./StayListCard";
 import CategoryFilter from "../../components/category/CategoryFilter";
 import SearchBar from "../search/SearchBar";
@@ -9,17 +10,23 @@ import "../../styles/components/stays/StayListSection.css";
 const StayListSection = () => {
   const [allStays, setAllStays] = useState([]);
   const [filteredStays, setFilteredStays] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchStays = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllStays();
-        setAllStays(data);
-        setFilteredStays(data);
+        const [stays, cats] = await Promise.all([
+          getAllStays(),
+          getCategories(),
+        ]);
+        setAllStays(stays);
+        setFilteredStays(stays);
+        setCategories(cats);
       } catch (err) {
-        console.error(err.message);
+        console.error("❌ Error al cargar datos:", err.message);
       }
     };
 
@@ -27,13 +34,12 @@ const StayListSection = () => {
       try {
         const id = await getUserId();
         if (id) setUserId(id);
-      } catch (err) {
-        console.warn("Usuario no autenticado");
+      } catch {
         setUserId(null);
       }
     };
 
-    fetchStays();
+    fetchData();
     fetchUser();
   }, []);
 
@@ -50,17 +56,40 @@ const StayListSection = () => {
 
       setFilteredStays(filtered);
     } catch (err) {
-      console.error("Error al buscar alojamientos:", err.message);
+      console.error("❌ Error al buscar:", err.message);
     }
+  };
+
+  const handleToggleCategory = (title) => {
+    const updated = selectedCategories.includes(title)
+      ? selectedCategories.filter((cat) => cat !== title)
+      : [...selectedCategories, title];
+    setSelectedCategories(updated);
+
+    const filtered = updated.length
+      ? allStays.filter((stay) =>
+          updated.includes(stay.category?.title)
+        )
+      : allStays;
+
+    setFilteredStays(filtered);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setFilteredStays(allStays);
   };
 
   return (
     <div className="stay-list-section">
-      {isLoading && (
-        <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>
-      )}
+      {isLoading && <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>}
       <SearchBar onSearch={handleSearch} />
-      <CategoryFilter />
+      <CategoryFilter
+        categories={categories}
+        selected={selectedCategories}
+        onToggle={handleToggleCategory}
+        onClear={clearFilters}
+      />
       <div className="stay-list-grid">
         {filteredStays.map((stay) => (
           <StayListCard key={stay.id} stay={stay} userId={userId} />

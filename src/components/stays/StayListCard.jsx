@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { addFavorite, removeFavorite, getFavoritesByUser } from "../../services/favoriteService";
+import {
+  addFavorite,
+  removeFavorite,
+  getFavoritesByUser,
+} from "../../services/favoriteService";
 import { toast } from "react-toastify";
 import "../../styles/components/stays/StayListCard.css";
 
@@ -15,7 +19,7 @@ const StayListCard = ({ stay, userId }) => {
     const fetchFavorites = async () => {
       try {
         const favs = await getFavoritesByUser(userId);
-        setIsFavorite(favs.some(fav => fav.stayId === stay.id));
+        setIsFavorite(favs.some((fav) => fav.stayId === stay.id));
       } catch (err) {
         console.error("❌ Error al obtener favoritos:", err);
       }
@@ -28,7 +32,9 @@ const StayListCard = ({ stay, userId }) => {
     e.stopPropagation();
 
     if (!userId) {
-      toast.warn("Debes iniciar sesión para marcar favoritos", { theme: "colored" });
+      toast.warn("Debes iniciar sesión para marcar favoritos", {
+        theme: "colored",
+      });
       return;
     }
 
@@ -46,7 +52,10 @@ const StayListCard = ({ stay, userId }) => {
   };
 
   return (
-    <div className="stay-list-card" onClick={() => navigate(`/stays/${stay.id}`)}>
+    <div
+      className="stay-list-card"
+      onClick={() => navigate(`/stays/${stay.id}`)}
+    >
       <div className="heart-icon" onClick={handleFavoriteClick}>
         {isFavorite ? (
           <AiFillHeart className="favorite-icon filled" />
@@ -64,9 +73,11 @@ const StayListCard = ({ stay, userId }) => {
             {stay.description?.slice(0, 100)}...
           </p>
         </div>
-        <div className="price-block">
-          <span className="price">${stay.pricePerNight} / noche</span>
-        </div>
+        {stay.pricePerNight > 0 && (
+          <div className="price-block">
+            <span className="price">${stay.pricePerNight} / noche</span>
+          </div>
+        )}
       </div>
     </div>
   );

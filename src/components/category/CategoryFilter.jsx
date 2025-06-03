@@ -1,7 +1,12 @@
-import React from 'react';
-import '../../styles/components/home/CategoryFilter.css';
+import React from "react";
+import "../../styles/components/home/CategoryFilter.css";
 
-const CategoryFilter = ({ categories = [], selected = [], onToggle = () => {}, onClear = () => {} }) => {
+const CategoryFilter = ({
+  categories = [],
+  selected = [],
+  onToggle = () => {},
+  onClear = () => {},
+}) => {
   return (
     <section className="category-filter-bar">
       <h2>Filtrar por categoria</h2>
@@ -9,10 +14,26 @@ const CategoryFilter = ({ categories = [], selected = [], onToggle = () => {}, o
         {categories.map((cat) => (
           <button
             key={cat.id}
-            className={selected.includes(cat.title) ? 'chip selected' : 'chip'}
+            className={selected.includes(cat.title) ? "chip selected" : "chip"}
             onClick={() => onToggle(cat.title)}
           >
-            {cat.imageUrl && <img src={cat.imageUrl} alt={cat.title} className="chip-icon" />}
+            {cat.imageUrl ? (
+              <img
+                src={cat.imageUrl}
+                alt={cat.title}
+                className="chip-icon"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/icons/default-category.svg"; // ruta del ícono genérico
+                }}
+              />
+            ) : (
+              <img
+                src="/icons/default-category.svg"
+                alt="Icono por defecto"
+                className="chip-icon"
+              />
+            )}
             <span>{cat.title}</span>
           </button>
         ))}

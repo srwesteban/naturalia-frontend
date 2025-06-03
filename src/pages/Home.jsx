@@ -3,6 +3,7 @@ import SearchBar from "../components/search/SearchBar";
 import StayRecommendations from "../components/StayRecommendatios";
 import StayListSection from "../components/stays/StayListSection";
 import "../styles/pages/Home.css";
+import CategoryFilter from "../components/category/CategoryFilter";
 
 const Home = () => {
   return (

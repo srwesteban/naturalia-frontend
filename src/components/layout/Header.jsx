@@ -1,13 +1,27 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Logo.png';
 import { useAuth } from '../../hooks/useAuth';
-import "../../styles/layout/Header.css";
+import '../../styles/layout/Header.css';
+import { AiOutlineHeart } from 'react-icons/ai';
+import { MdLogout } from 'react-icons/md';
 
 const Header = () => {
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const getInitials = (name) => {
     return name?.charAt(0)?.toUpperCase() || '?';
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMenuOpen(false);
   };
 
   return (
@@ -30,8 +44,22 @@ const Header = () => {
             </>
           ) : (
             <div className="user-avatar-wrapper">
-              <div className="avatar">{getInitials(user.name)}</div>
-              <button className='closeSession' onClick={logout}>Cerrar sesión</button>
+              <div className="avatar" onClick={toggleMenu}>
+                {getInitials(user.name)}
+              </div>
+              <div className="menu-toggle" onClick={toggleMenu}>
+                <div className="dot"></div>
+              </div>
+              {menuOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={() => navigate('/favorites')} className="dropdown-item">
+                    <AiOutlineHeart /> Listas de favoritos
+                  </button>
+                  <button onClick={handleLogout} className="dropdown-item">
+                    <MdLogout /> Cerrar sesión
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
