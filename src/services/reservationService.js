@@ -13,7 +13,6 @@ export const createReservation = async (data) => {
   });
 
   if (!response.ok) {
-    // Intenta leer como JSON con .message, si no, como texto plano
     let errorMsg = "Error al crear la reserva.";
     try {
       const errorBody = await response.json();
@@ -26,4 +25,10 @@ export const createReservation = async (data) => {
   }
 
   return await response.json();
+};
+
+export const getReservationsByStay = async (stayId) => {
+  const response = await fetch(`${API_URL}/reservations/stay/${stayId}`);
+  if (!response.ok) throw new Error("No se pudieron cargar las reservas");
+  return response.json();
 };

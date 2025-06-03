@@ -1,0 +1,101 @@
+import React, { useState } from "react";
+import { DateRange } from "react-date-range";
+import { es } from "date-fns/locale";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import "../../styles/components/search/SearchBar.css";
+import { getSuggestions } from "../../services/stayService.js";
+
+const SearchBar = ({ onSearch }) => {
+  const [searchText, setSearchText] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const handleSearch = () => {
+    const checkIn = dateRange[0].startDate.toISOString().split("T")[0];
+    const checkOut = dateRange[0].endDate.toISOString().split("T")[0];
+    onSearch(checkIn, checkOut, searchText); // Puedes usar searchText también si quieres filtrar por nombre
+  };
+
+  const handleSearchChange = async (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+
+    if (value.trim().length >= 2) {
+      try {
+        const results = await getSuggestions(value);
+        setSuggestions(results);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error("Error obteniendo sugerencias:", err);
+      }
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (name) => {
+    setSearchText(name);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+  return (
+    <div className="search-bar">
+      <h2>Encuentra tu próxima estadía</h2>
+      <p>Selecciona las fechas o busca por nombre para ver alojamientos disponibles</p>
+
+      <div className="autocomplete">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={searchText}
+          onChange={handleSearchChange}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+        />
+        {showSuggestions && suggestions.length > 0 && (
+          <ul className="suggestion-list">
+            {suggestions.map((stay) => (
+              <li key={stay.id} onClick={() => handleSuggestionClick(stay.name)}>
+                {stay.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div
+        className="calendar-toggle"
+        onClick={() => setShowCalendar(!showCalendar)}
+      >
+        📅 Seleccionar fechas
+      </div>
+      {showCalendar && (
+        <DateRange
+          editableDateInputs={true}
+          onChange={(item) => setDateRange([item.selection])}
+          moveRangeOnFirstSelection={false}
+          ranges={dateRange}
+          locale={es}
+        />
+      )}
+
+      <button className="search-button" onClick={handleSearch}>
+        Buscar
+      </button>
+    </div>
+  );
+};
+
+export default SearchBar;

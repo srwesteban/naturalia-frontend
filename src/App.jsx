@@ -11,10 +11,14 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserPanel from "./components/admin/UserPanel";
 import AdminFeaturesPage from "./pages/AdminFeaturesPage";
 import AdminCategoryPage from "./pages/AdminCategoryPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <Header />
       <main
         style={{ flex: 1, minHeight: "100%", margin: "180px", padding: "0" }}

@@ -1,0 +1,75 @@
+.search-bar {
+  background-color: var(--color-white);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-bar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.search-bar p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.calendar-toggle {
+  margin: 1rem 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.search-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+}
+
+.autocomplete {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.autocomplete input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.suggestion-list {
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestion-list li {
+  padding: 0.6rem;
+  cursor: pointer;
+}
+
+.suggestion-list li:hover {
+  background-color: #f0f0f0;
+}

@@ -52,3 +52,18 @@ export const updateStay = async (id, stayData) => {
 export const deleteStayById = async (id) => {
   await authFetch(`${API_BASE_URL}/stays/${id}`, { method: 'DELETE' });
 };
+
+
+export const searchStaysByDate = async (checkIn, checkOut) => {
+  const response = await fetch(
+    `${API_BASE_URL}/stays/search?checkIn=${checkIn}&checkOut=${checkOut}`
+  );
+  if (!response.ok) throw new Error('No se pudieron buscar los alojamientos');
+  return response.json();
+};
+
+export const getSuggestions = async (query) => {
+  const response = await fetch(`http://localhost:8080/stays/suggestions?query=${query}`);
+  if (!response.ok) throw new Error('No se pudieron obtener sugerencias');
+  return response.json();
+};

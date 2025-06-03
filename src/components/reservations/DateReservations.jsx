@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createReservation } from "../../services/reservationService";
+import {
+  createReservation,
+  getReservationsByStay,
+} from "../../services/reservationService";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/components/reservation/DateReservation.css";
 import { useAuth } from "../../hooks/useAuth";
-import { getUserId } from "../../services/authService"; // 🔥 importante
+import { getUserId } from "../../services/authService";
 
 const DateReservation = ({ stayId }) => {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ const DateReservation = ({ stayId }) => {
   const [checkOut, setCheckOut] = useState(null);
   const [error, setError] = useState("");
   const { user, loading } = useAuth();
+  const [reservedDates, setReservedDates] = useState([]);
 
   const handleSubmit = async () => {
     if (!user || user.role !== "USER") {
@@ -51,6 +55,31 @@ const DateReservation = ({ stayId }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchReservedDates = async () => {
+      try {
+        const data = await getReservationsByStay(stayId);
+
+        const allDates = [];
+
+        data.forEach((res) => {
+          const start = new Date(res.checkIn);
+          const end = new Date(res.checkOut);
+
+          for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+            allDates.push(new Date(d.getTime())); // ✅ clona correctamente cada fecha
+          }
+        });
+
+        setReservedDates(allDates);
+      } catch (err) {
+        console.error("Error al cargar reservas:", err.message);
+      }
+    };
+
+    fetchReservedDates();
+  }, [stayId]);
+
   if (loading) return null;
 
   return (
@@ -66,6 +95,7 @@ const DateReservation = ({ stayId }) => {
             startDate={checkIn}
             endDate={checkOut}
             minDate={new Date()}
+            excludeDates={reservedDates}
             placeholderText="Selecciona fecha"
           />
         </div>
@@ -78,6 +108,7 @@ const DateReservation = ({ stayId }) => {
             startDate={checkIn}
             endDate={checkOut}
             minDate={checkIn || new Date()}
+            excludeDates={reservedDates}
             placeholderText="Selecciona fecha"
           />
         </div>

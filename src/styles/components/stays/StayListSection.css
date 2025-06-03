@@ -42,3 +42,9 @@
     grid-template-columns: 1fr;
   }
 }
+.loading-text {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #666;
+}
