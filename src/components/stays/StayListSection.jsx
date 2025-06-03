@@ -68,7 +68,7 @@ const StayListSection = () => {
 
     const filtered = updated.length
       ? allStays.filter((stay) =>
-          updated.includes(stay.category?.title)
+          stay.categories?.some((cat) => updated.includes(cat.title))
         )
       : allStays;
 
@@ -82,7 +82,9 @@ const StayListSection = () => {
 
   return (
     <div className="stay-list-section">
-      {isLoading && <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>}
+      {isLoading && (
+        <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>
+      )}
       <SearchBar onSearch={handleSearch} />
       <CategoryFilter
         categories={categories}
