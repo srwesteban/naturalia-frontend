@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { loginUser } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext'; // 👈 Asegúrate de importar bien
 import '../../styles/components/auth/LoginForm.css';
 
 const initialForm = {
@@ -8,11 +9,13 @@ const initialForm = {
   password: ''
 };
 
-const LoginForm = ({ onLoginSuccess }) => {
+const LoginForm = () => {
   const [form, setForm] = useState(initialForm);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { loadUser } = useAuth(); // ✅ Esto sí es válido aquí (dentro del componente)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,17 +29,7 @@ const LoginForm = ({ onLoginSuccess }) => {
     try {
       const res = await loginUser(form);
       localStorage.setItem('token', res.token);
-
-      const payload = JSON.parse(atob(res.token.split('.')[1]));
-      const fullName = payload.firstname || 'Usuario';
-      const initials = fullName.slice(0, 1).toUpperCase();
-
-      localStorage.setItem('userInitials', initials);
-      localStorage.setItem('userName', fullName);
-
-      if (onLoginSuccess) onLoginSuccess(res.token);
-
-      // 🔁 Redirigir al home
+      loadUser(); // ✅ Actualiza el contexto
       navigate('/');
     } catch (err) {
       setErrorMsg('Correo o contraseña incorrectos. Intenta nuevamente.');

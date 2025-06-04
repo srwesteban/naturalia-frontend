@@ -1,3 +1,5 @@
+// src/hooks/useAuth.jsx
+
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 

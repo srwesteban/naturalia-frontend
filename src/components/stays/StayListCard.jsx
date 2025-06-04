@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import "../../styles/components/stays/StayListCard.css";
 
-const StayListCard = ({ stay, userId }) => {
+const StayListCard = ({ stay, userId, onUnfavorite }) => {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -41,13 +41,14 @@ const StayListCard = ({ stay, userId }) => {
     try {
       if (isFavorite) {
         await removeFavorite(userId, stay.id);
+        setIsFavorite(false);
+        if (onUnfavorite) onUnfavorite(); // 🔥 Aquí se actualiza la lista
       } else {
         await addFavorite(userId, stay.id);
+        setIsFavorite(true);
       }
-      setIsFavorite(!isFavorite);
     } catch (err) {
-      console.error("❌ Error al modificar favorito:", err);
-      toast.error("No se pudo actualizar el favorito", { theme: "colored" });
+      console.error("❌ Error al modificar favorito:", err.message);
     }
   };
 

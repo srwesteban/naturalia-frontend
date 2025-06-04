@@ -7,7 +7,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/components/reservation/DateReservation.css";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth.jsx";
 import { getUserId } from "../../services/authService";
 
 const DateReservation = ({ stayId }) => {

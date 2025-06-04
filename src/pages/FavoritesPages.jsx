@@ -29,7 +29,10 @@ const FavoritesPage = () => {
 
   const totalPages = Math.ceil(favorites.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentFavorites = favorites.slice(startIndex, startIndex + itemsPerPage);
+  const currentFavorites = favorites.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -45,7 +48,9 @@ const FavoritesPage = () => {
       {loading ? (
         <p className="loading">Cargando favoritos...</p>
       ) : favorites.length === 0 ? (
-        <p className="no-favorites">Aún no has marcado ningún alojamiento como favorito.</p>
+        <p className="no-favorites">
+          Aún no has marcado ningún alojamiento como favorito.
+        </p>
       ) : (
         <>
           <div className="favorites-grid">
@@ -59,6 +64,11 @@ const FavoritesPage = () => {
                   images: [fav.stayImage],
                 }}
                 userId={fav.userId}
+                onUnfavorite={() => {
+                  setFavorites((prev) =>
+                    prev.filter((f) => f.stayId !== fav.stayId)
+                  );
+                }}
               />
             ))}
           </div>
