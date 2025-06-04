@@ -39,5 +39,5 @@ export const useAuth = () => {
     window.location.href = "/";
   };
 
-  return { user, logout, loading }; // 👈 importante
+  return { user, logout, loading, loadUser }; // 👈 AGREGA esto
 };

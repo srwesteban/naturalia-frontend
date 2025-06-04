@@ -22,7 +22,7 @@ const MenuToggle = () => {
   const handleLogout = () => {
     logout();
     setOpen(false);
-    navigate("/"); // redirige y actualiza
+    navigate("/");
   };
 
   const getInitials = (name) => name?.charAt(0)?.toUpperCase() || "?";
@@ -38,7 +38,7 @@ const MenuToggle = () => {
   }, []);
 
   useEffect(() => {
-    setOpen(false); // Cierra menú si cambia la ruta
+    setOpen(false);
   }, [location]);
 
   return (
