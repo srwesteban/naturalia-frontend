@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/components/ConfirmDeleteModal.css';
+import '../../styles/components/modals/ConfirmDeleteModal.css';
 
 const ConfirmDeleteModal = ({ onClose, onConfirm, stayName }) => {
   return (

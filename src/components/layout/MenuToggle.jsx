@@ -2,17 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import {
-  FaUserCircle,
   FaHeart,
-  FaSignOutAlt,
-  FaSignInAlt,
-  FaUserPlus,
+  FaSignOutAlt
 } from "react-icons/fa";
 import "../../styles/components/layout/MenuToggle.css";
+import LoginModal from "../auth/LoginModal.jsx";
+import RegisterModal from "../auth/RegisterModal.jsx"; // 👈 nuevo import
 
 const MenuToggle = () => {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false); // 👈 nuevo estado
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +23,7 @@ const MenuToggle = () => {
   const handleLogout = () => {
     logout();
     setOpen(false);
-    navigate("/");
+    window.location.reload(); // ✅ asegura reinicio limpio
   };
 
   const getInitials = (name) => name?.charAt(0)?.toUpperCase() || "?";
@@ -45,19 +46,22 @@ const MenuToggle = () => {
     <div className="menu-toggle" ref={menuRef}>
       {user ? (
         <button className="menu-button" onClick={toggleMenu}>
-          <span className="avatar">{getInitials(user.name)}</span>
+          <span className="avatar">{getInitials(user.firstName)}</span>
           <span className="menu-lines">☰</span>
         </button>
       ) : (
         <div className="auth-buttons">
-          <Link to="/login" className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => setShowLogin(true)}>
             Iniciar sesión
-          </Link>
-          <Link to="/registry" className="btn btn-outline">
+          </button>
+          <button className="btn btn-outline" onClick={() => setShowRegister(true)}>
             Crear cuenta
-          </Link>
+          </button>
         </div>
       )}
+
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
 
       {open && user && (
         <div className="menu-dropdown">

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "../styles/pages/AdminPanel.css";
+import "../styles/pages/AdminPanelPage.css";
 import { getStaySummaries, deleteStayById, updateStay, getStayById } from "../services/stayService";
 import StayTable from "../components/stays/StayTable";
-import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
-import EditStayModal from "../components/stays/EditStayModal";
+import ConfirmDeleteModal from "../components/modals/ConfirmDeleteModal";
+import EditStayModal from "../components/modals/EditStayModal";
 import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {

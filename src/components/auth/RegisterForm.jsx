@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { registerUser } from '../../services/authService';
+import { registerUser, loginUser } from '../../services/authService';
+import { useAuth } from '../../hooks/useAuth.jsx';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import '../../styles/components/auth/RegisterForm.css';
@@ -14,11 +15,11 @@ const initialForm = {
   phoneNumber: '',
 };
 
-const RegisterForm = () => {
+const RegisterForm = ({ onRegisterSuccess }) => {
   const [form, setForm] = useState(initialForm);
   const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,7 +49,6 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
-    setSuccessMsg('');
 
     const validationError = validateFields();
     if (validationError) {
@@ -62,11 +62,24 @@ const RegisterForm = () => {
         ...form,
         phoneNumber: `+${form.phoneNumber.replace(/\D/g, '')}`,
       };
+
       await registerUser(payload);
-      setSuccessMsg('Registro exitoso. Ahora puedes iniciar sesión.');
-      setForm(initialForm);
+
+      const res = await loginUser({
+        email: form.email,
+        password: form.password
+      });
+
+      login(res.token);
+      if (onRegisterSuccess) onRegisterSuccess();
     } catch (err) {
-      setErrorMsg(err.message || 'Ocurrió un error en el registro');
+      let msg = 'Ocurrió un error en el registro';
+
+      if (err.message.includes('duplicate key') || err.message.includes('already exists')) {
+        msg = 'Ya existe un usuario registrado con ese número de documento o correo.';
+      }
+
+      setErrorMsg(msg);
     } finally {
       setLoading(false);
     }
@@ -75,9 +88,7 @@ const RegisterForm = () => {
   return (
     <section className="register-form" style={{ maxWidth: '400px', margin: '0 auto' }}>
       <h2 style={{ textAlign: 'center' }}>Crear cuenta</h2>
-
       {errorMsg && <p className="error">{errorMsg}</p>}
-      {successMsg && <p className="success">{successMsg}</p>}
 
       <form onSubmit={handleSubmit}>
         <input

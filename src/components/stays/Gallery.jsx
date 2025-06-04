@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import '../styles/components/Gallery.css';
-import ImageSliderModal from './ImageSliderModal';
+import '../../styles/components/stays/Gallery.css'
+import ImageSliderModal from '../modals/ImageSliderModal';
 
 const Gallery = ({ images = [] }) => {
   const [showSlider, setShowSlider] = useState(false);

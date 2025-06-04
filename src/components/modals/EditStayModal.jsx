@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/components/stays/EditStayModal.css";
+import "../../styles/components/modals/EditStayModal.css";
 import { uploadImageToCloudinary } from "../../services/cloudinary";
 
 const EditStayModal = ({ stayId, onClose, onSave, initialData }) => {

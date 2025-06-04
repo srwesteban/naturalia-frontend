@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getAllStays } from '../services/stayService';
-import StayCard from './stays/StayCard';
-import '../styles/components/stays/StayRecommendations.css';
+import { getAllStays } from '../../services/stayService';
+import StayCard from './StayCard';
+import '../../styles/components/stays/StayRecommendations.css';
 
 const StayRecommendations = () => {
   const [stays, setStays] = useState([]);

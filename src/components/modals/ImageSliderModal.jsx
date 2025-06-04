@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/components/ImageSliderModal.css';
+import '../../styles/components/modals/ImageSliderModal.css';
 
 const ImageSliderModal = ({ images, currentIndex, onClose, onNext, onPrev }) => {
   if (!images || images.length === 0) return null;

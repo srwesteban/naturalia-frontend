@@ -2,11 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home";
 import CreateStayForm from "./components/stays/CreateStayForm";
-import StayDetail from "./pages/StayDetail";
+import StayDetail from "./pages/StayDetailPage";
 import Footer from "./components/layout/Footer";
-import AdminPanel from "./pages/AdminPanel";
+import AdminPanel from "./pages/AdminPanelPage";
 import RegisterForm from "./components/auth/RegisterForm";
-import LoginForm from "./components/auth/LoginForm";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserPanel from "./components/admin/UserPanel";
 import AdminFeaturesPage from "./pages/AdminFeaturesPage";
@@ -56,8 +55,6 @@ function App() {
           <Route path="policies" element={<PoliciesPage />} />
           <Route path="adminfeatures" element={<AdminFeaturesPage />} />
           <Route path="admincategory" element={<AdminCategoryPage />} />
-          <Route path="registry" element={<RegisterForm />} />
-          <Route path="login" element={<LoginForm />} />
         </Routes>
       </main>
       <Footer />

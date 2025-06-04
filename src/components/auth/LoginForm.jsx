@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { loginUser } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth.jsx';
 import '../../styles/components/auth/LoginForm.css';
 
 const initialForm = {
@@ -13,6 +14,7 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ usamos el contexto directamente
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,19 +27,8 @@ const LoginForm = ({ onLoginSuccess }) => {
 
     try {
       const res = await loginUser(form);
-      localStorage.setItem('token', res.token);
-
-      const payload = JSON.parse(atob(res.token.split('.')[1]));
-      const fullName = payload.firstname || 'Usuario';
-      const initials = fullName.slice(0, 1).toUpperCase();
-
-      localStorage.setItem('userInitials', initials);
-      localStorage.setItem('userName', fullName);
-
-      if (onLoginSuccess) onLoginSuccess(res.token);
-
-      // 🔁 Redirigir al home
-      navigate('/');
+      login(res.token); // ✅ actualiza el contexto con el token
+      if (onLoginSuccess) onLoginSuccess(); // ✅ solo cierra modal
     } catch (err) {
       setErrorMsg('Correo o contraseña incorrectos. Intenta nuevamente.');
     } finally {
