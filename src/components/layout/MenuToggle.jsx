@@ -3,17 +3,18 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import {
   FaHeart,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaCalendarAlt 
 } from "react-icons/fa";
 import "../../styles/components/layout/MenuToggle.css";
 import LoginModal from "../auth/LoginModal.jsx";
-import RegisterModal from "../auth/RegisterModal.jsx"; // 👈 nuevo import
+import RegisterModal from "../auth/RegisterModal.jsx";
 
 const MenuToggle = () => {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false); // 👈 nuevo estado
+  const [showRegister, setShowRegister] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +24,7 @@ const MenuToggle = () => {
   const handleLogout = () => {
     logout();
     setOpen(false);
-    window.location.reload(); // ✅ asegura reinicio limpio
+    window.location.reload();
   };
 
   const getInitials = (name) => name?.charAt(0)?.toUpperCase() || "?";
@@ -67,6 +68,9 @@ const MenuToggle = () => {
         <div className="menu-dropdown">
           <button className="menu-item" onClick={() => navigate("/favorites")}>
             <FaHeart /> Favoritos
+          </button>
+          <button className="menu-item" onClick={() => navigate("/reservations")}>
+            <FaCalendarAlt /> Mis Reservaciones
           </button>
           <button className="menu-item logout" onClick={handleLogout}>
             <FaSignOutAlt /> Cerrar sesión

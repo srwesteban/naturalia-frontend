@@ -9,13 +9,17 @@ import "../styles/pages/ReservationsPage.css";
 
 const ReservationsPage = () => {
   const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const loadReservations = async () => {
+    setLoading(true);
     try {
       const data = await getMyReservations();
       setReservations(data);
     } catch (err) {
       console.error("Error cargando reservas:", err);
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -38,15 +42,17 @@ const ReservationsPage = () => {
   return (
     <div className="reservations-page">
       <h2>Mis Reservas</h2>
-      {reservations.length === 0 ? (
+
+      {loading ? (
+        <p className="loading-msg">Cargando reservas...</p> // 👈 opcional: spinner o texto
+      ) : reservations.length === 0 ? (
         <p className="no-reservations-msg">
           🔎 No tienes ninguna reserva registrada.
         </p>
       ) : (
         <div className="reservations-list">
           {reservations.map((res) => {
-            const isPast = new Date(res.checkOut) < new Date();
-
+            const isPast = new Date(res.checkOut) < today;
             return (
               <div
                 key={res.id}
@@ -72,9 +78,9 @@ const ReservationsPage = () => {
                       Eliminar
                     </button>
                   ) : (
-                    <button onClick={() => handleDelete(res.id)}>
+                    <button onClick={() => handleCancel(res.id)}>
                       Cancelar
-                    </button>
+                    </button> // 👈 corregido
                   )}
                 </div>
               </div>
