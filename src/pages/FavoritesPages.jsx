@@ -15,7 +15,6 @@ const FavoritesPage = () => {
       try {
         const id = await getUserId();
         const favs = await getFavoritesByUser(id);
-        console.log("✅ Favoritos obtenidos:", favs);
         setFavorites(favs);
       } catch (err) {
         console.error("❌ Error al obtener favoritos:", err.message);

@@ -7,6 +7,7 @@ import DateReservation from "../components/reservations/DateReservations";
 import { getUserId } from "../services/authService";
 import ShareModal from "../components/modals/ShareModal";
 import { useAuth } from "../context/AuthContext";
+import ReviewSection from "../components/reviews/ReviewSection";
 
 const StayDetail = () => {
   const { id } = useParams();
@@ -58,9 +59,15 @@ const StayDetail = () => {
         <Gallery images={stay.images} />
 
         <p className="description">{stay.description}</p>
-        <p><strong>Ubicación:</strong> {stay.location}</p>
-        <p><strong>Capacidad:</strong> {stay.capacity} personas</p>
-        <p><strong>Precio:</strong> ${stay.pricePerNight} / noche</p>
+        <p>
+          <strong>Ubicación:</strong> {stay.location}
+        </p>
+        <p>
+          <strong>Capacidad:</strong> {stay.capacity} personas
+        </p>
+        <p>
+          <strong>Precio:</strong> ${stay.pricePerNight} / noche
+        </p>
 
         {!userId && (
           <p className="login-message">
@@ -77,6 +84,11 @@ const StayDetail = () => {
 
       {showShare && (
         <ShareModal stay={stay} onClose={() => setShowShare(false)} />
+      )}
+
+      {/* ⭐ Sección de reseñas visible para todos */}
+      {stay && (
+        <ReviewSection stayId={stay.id} />
       )}
     </div>
   );

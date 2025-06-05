@@ -45,3 +45,8 @@
   background-color: #c0392b;
   color: white;
 }
+.error-message {
+  color: var(--color-error);
+  font-weight: 500;
+  margin-top: 1rem;
+}

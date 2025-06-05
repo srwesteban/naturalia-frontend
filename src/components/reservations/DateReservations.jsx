@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/components/reservation/DateReservation.css";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import { getUserId } from "../../services/authService";
+import FakePayModal from "../modals/FakePayModal.jsx";
 
 const DateReservation = ({ stayId }) => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const DateReservation = ({ stayId }) => {
   const [error, setError] = useState("");
   const { user, loading } = useAuth();
   const [reservedDates, setReservedDates] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [reservationData, setReservationData] = useState(null);
 
   const handleSubmit = async () => {
     if (!user || user.role !== "USER") {
@@ -35,23 +38,24 @@ const DateReservation = ({ stayId }) => {
     }
 
     try {
-      const userId = await getUserId(); // ✅ ID correcto desde backend
-      console.log("🆔 Usuario:", userId);
-      console.log("🏕️ Alojamiento:", stayId);
-      console.log("📅 checkIn:", checkIn);
-      console.log("📅 checkOut:", checkOut);
-
-      await createReservation({
+      const userId = await getUserId();
+      setReservationData({
         stayId,
         userId,
         checkIn: checkIn.toISOString().split("T")[0],
         checkOut: checkOut.toISOString().split("T")[0],
       });
-
-      navigate("/reservas");
+      setShowModal(true);
     } catch (err) {
-      setError(err.message || "Error al crear la reserva.");
-      console.error("❌ Error al reservar:", err);
+      setError("Error interno. Intenta de nuevo más tarde.");
+    }
+  };
+
+  const handleSuccess = async () => {
+    try {
+      await createReservation(reservationData);
+    } catch (err) {
+      console.error("❌ Error al crear reserva tras pago:", err);
     }
   };
 
@@ -67,7 +71,7 @@ const DateReservation = ({ stayId }) => {
           const end = new Date(res.checkOut);
 
           for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
-            allDates.push(new Date(d.getTime())); // ✅ clona correctamente cada fecha
+            allDates.push(new Date(d.getTime()));
           }
         });
 
@@ -119,6 +123,12 @@ const DateReservation = ({ stayId }) => {
       <button onClick={handleSubmit} className="reserve-button">
         Reservar
       </button>
+
+      <FakePayModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSuccess={handleSuccess}
+      />
     </div>
   );
 };

@@ -33,5 +33,9 @@ export const deleteCategory = async (categoryId) => {
   const resp = await fetch(`${API_URL}/categories/${categoryId}`, {
     method: 'DELETE',
   });
-  if (!resp.ok) throw new Error('Error eliminando la categoría');
+
+  if (!resp.ok) {
+    const errorData = await resp.json(); // ✅ Lee JSON, no texto plano
+    throw new Error(errorData.message || 'Error eliminando la categoría');
+  }
 };

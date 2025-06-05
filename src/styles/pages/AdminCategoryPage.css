@@ -1,20 +1,75 @@
 .admin-category-page {
   padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: var(--color-background, #fff);
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 }
 
-.admin-category-page table {
+.page-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.list-title {
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.category-table-wrapper {
+  overflow-x: auto;
+}
+
+.category-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
 }
 
-.admin-category-page th,
-.admin-category-page td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
+.category-table th,
+.category-table td {
   text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
 }
 
-.admin-category-page img {
+.category-table img {
   border-radius: 8px;
+  object-fit: cover;
+}
+
+.btn-delete {
+  background-color: var(--color-error, #d9534f);
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c9302c;
+}
+
+@media (max-width: 768px) {
+  .admin-category-page {
+    padding: 1rem;
+  }
+
+  .category-table th,
+  .category-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-delete {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+  }
 }

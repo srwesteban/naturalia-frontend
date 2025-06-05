@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FavoritesPage from "./pages/FavoritesPages";
 import PoliciesPage from "./pages/PoliciesPage";
+import ReservationsPage from "./pages/ReservationsPage";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
           <Route path="policies" element={<PoliciesPage />} />
           <Route path="adminfeatures" element={<AdminFeaturesPage />} />
           <Route path="admincategory" element={<AdminCategoryPage />} />
+          <Route path="reservations" element={<ReservationsPage />} />
         </Routes>
       </main>
       <Footer />

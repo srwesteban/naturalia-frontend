@@ -10,6 +10,7 @@ const SearchBar = ({ onSearch }) => {
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [dateRange, setDateRange] = useState([
     {
@@ -20,10 +21,16 @@ const SearchBar = ({ onSearch }) => {
   ]);
   const [showCalendar, setShowCalendar] = useState(false);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    setLoading(true);
     const checkIn = dateRange[0].startDate.toISOString().split("T")[0];
     const checkOut = dateRange[0].endDate.toISOString().split("T")[0];
-    onSearch(checkIn, checkOut, searchText); // Puedes usar searchText también si quieres filtrar por nombre
+
+    try {
+      await onSearch(checkIn, checkOut, searchText);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearchChange = async (e) => {
@@ -48,12 +55,16 @@ const SearchBar = ({ onSearch }) => {
     setSearchText(name);
     setSuggestions([]);
     setShowSuggestions(false);
+    handleSearch();
   };
 
   return (
     <div className="search-bar">
       <h2>Encuentra tu próxima estadía</h2>
-      <p>Selecciona las fechas o busca por nombre para ver alojamientos disponibles</p>
+      <p>
+        Selecciona las fechas o busca por nombre para ver alojamientos
+        disponibles
+      </p>
 
       <div className="autocomplete">
         <input
@@ -67,7 +78,10 @@ const SearchBar = ({ onSearch }) => {
         {showSuggestions && suggestions.length > 0 && (
           <ul className="suggestion-list">
             {suggestions.map((stay) => (
-              <li key={stay.id} onClick={() => handleSuggestionClick(stay.name)}>
+              <li
+                key={stay.id}
+                onClick={() => handleSuggestionClick(stay.name)}
+              >
                 {stay.name}
               </li>
             ))}
@@ -91,8 +105,12 @@ const SearchBar = ({ onSearch }) => {
         />
       )}
 
-      <button className="search-button" onClick={handleSearch}>
-        Buscar
+      <button
+        className="search-button"
+        onClick={handleSearch}
+        disabled={loading}
+      >
+        {loading ? <span className="spinner"></span> : "Buscar"}
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createCategory } from '../../services/categoryService';
+import '../../styles/components/category/AddCategoryForm.css';
 
 const AddCategoryForm = ({ onCategoryCreated }) => {
   const [title, setTitle] = useState('');

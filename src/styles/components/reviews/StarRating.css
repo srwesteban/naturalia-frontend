@@ -1,0 +1,16 @@
+/* src/styles/components/reviews/StarRating.css */
+.star-rating {
+  display: flex;
+  gap: 4px;
+  font-size: 1.5rem;
+  color: #b9b4b4;
+  cursor: pointer;
+}
+
+.star-rating .star.filled {
+  color: #f59403;
+}
+
+.star-rating .star:hover {
+  color: #f3a407;
+}

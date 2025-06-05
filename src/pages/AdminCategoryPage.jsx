@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getCategories, deleteCategory } from '../services/categoryService';
 import AddCategoryForm from '../components/category/AddCategoryForm';
+import ConfirmDeleteModal from '../components/modals/ConfirmDeleteModal';
 import '../styles/pages/AdminCategoryPage.css';
 
 const AdminCategoryPage = () => {
   const [categories, setCategories] = useState([]);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const loadCategories = async () => {
     try {
@@ -19,46 +22,75 @@ const AdminCategoryPage = () => {
     loadCategories();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar esta categoría?')) return;
+  const handleDeleteClick = (category) => {
+    setCategoryToDelete(category);
+    setErrorMsg('');
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await deleteCategory(id);
+      await deleteCategory(categoryToDelete.id);
+      setCategoryToDelete(null);
       loadCategories();
     } catch (err) {
-      alert('Error al eliminar la categoría');
+      setErrorMsg(err.message);
     }
   };
 
   return (
     <div className="admin-category-page">
-      <h2>Gestión de Categorías</h2>
-      <AddCategoryForm onCategoryCreated={loadCategories} />
-      <hr />
-      <h3>Categorías existentes</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Imagen</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((cat) => (
-            <tr key={cat.id}>
-              <td>{cat.title}</td>
-              <td>{cat.description}</td>
-              <td>
-                <img src={cat.imageUrl} alt={cat.title} width={50} />
-              </td>
-              <td>
-                <button onClick={() => handleDelete(cat.id)}>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h2 className="page-title">Gestión de Categorías</h2>
+
+      <section className="form-section">
+        <AddCategoryForm onCategoryCreated={loadCategories} />
+      </section>
+
+      <section className="list-section">
+        <h3 className="list-title">Categorías existentes</h3>
+
+        <div className="category-table-wrapper">
+          <table className="category-table">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categories.map((cat) => (
+                <tr key={cat.id}>
+                  <td>{cat.title}</td>
+                  <td>{cat.description}</td>
+                  <td>
+                    <img src={cat.imageUrl} alt={cat.title} width={50} height={50} />
+                  </td>
+                  <td>
+                    <button className="btn-delete" onClick={() => handleDeleteClick(cat)}>
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {categoryToDelete && (
+        <ConfirmDeleteModal
+          entityName={`categoría "${categoryToDelete.title}"`}
+          title="¿Eliminar categoría?"
+          warning="Esta categoría podría estar asociada a productos."
+          error={errorMsg}
+          onClose={() => {
+            setCategoryToDelete(null);
+            setErrorMsg('');
+          }}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };

@@ -32,3 +32,38 @@ export const getReservationsByStay = async (stayId) => {
   if (!response.ok) throw new Error("No se pudieron cargar las reservas");
   return response.json();
 };
+
+export const getMyReservations = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/reservations/mine`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error('No se pudieron cargar tus reservas');
+  return response.json();
+};
+
+export const cancelReservation = async (id) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/reservations/${id}/cancel`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error('Error al cancelar la reserva');
+  return response.text();
+};
+
+export const deleteReservation = async (id) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_URL}/reservations/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error('Error al eliminar la reserva');
+  return response.text();
+};
