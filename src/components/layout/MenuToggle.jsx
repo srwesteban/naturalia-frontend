@@ -1,24 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
 import {
   FaHeart,
   FaSignOutAlt,
-  FaCalendarAlt 
+  FaCalendarAlt,
+  FaUserPlus,
 } from "react-icons/fa";
 import "../../styles/components/layout/MenuToggle.css";
 import LoginModal from "../auth/LoginModal.jsx";
 import RegisterModal from "../auth/RegisterModal.jsx";
+import BecomeHostModal from "../modals/BecomeHostModal.jsx";
+import { getUserRole } from "../../services/authService";
 
 const MenuToggle = () => {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showHostModal, setShowHostModal] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const role = user?.role;
   const toggleMenu = () => setOpen(!open);
 
   const handleLogout = () => {
@@ -46,16 +51,62 @@ const MenuToggle = () => {
   return (
     <div className="menu-toggle" ref={menuRef}>
       {user ? (
-        <button className="menu-button" onClick={toggleMenu}>
-          <span className="avatar">{getInitials(user.firstName)}</span>
-          <span className="menu-lines">☰</span>
-        </button>
+        <>
+          <button className="menu-button" onClick={toggleMenu}>
+            <div className="avatar-wrapper">
+              <span className="avatar">
+                {getInitials(user.firstName)}
+                {role !== "USER" && (
+                  <span className="role-label-inline">
+                    {role === "HOST" ? "HOST" : "ADMIN"}
+                  </span>
+                )}
+              </span>
+            </div>
+
+            <span className="menu-lines">☰</span>
+          </button>
+
+          {open && (
+            <div className="menu-dropdown">
+              <button
+                className="menu-item"
+                onClick={() => navigate("/favorites")}
+              >
+                <FaHeart /> Favoritos
+              </button>
+              <button
+                className="menu-item"
+                onClick={() => navigate("/reservations")}
+              >
+                <FaCalendarAlt /> Mis Reservaciones
+              </button>
+              {role === "USER" && (
+                <button
+                  className="menu-item"
+                  onClick={() => setShowHostModal(true)}
+                >
+                  <FaUserPlus /> Conviértete en Host
+                </button>
+              )}
+              <button className="menu-item logout" onClick={handleLogout}>
+                <FaSignOutAlt /> Cerrar sesión
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="auth-buttons">
-          <button className="btn btn-primary" onClick={() => setShowLogin(true)}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowLogin(true)}
+          >
             Iniciar sesión
           </button>
-          <button className="btn btn-outline" onClick={() => setShowRegister(true)}>
+          <button
+            className="btn btn-outline"
+            onClick={() => setShowRegister(true)}
+          >
             Crear cuenta
           </button>
         </div>
@@ -63,19 +114,8 @@ const MenuToggle = () => {
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
       {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
-
-      {open && user && (
-        <div className="menu-dropdown">
-          <button className="menu-item" onClick={() => navigate("/favorites")}>
-            <FaHeart /> Favoritos
-          </button>
-          <button className="menu-item" onClick={() => navigate("/reservations")}>
-            <FaCalendarAlt /> Mis Reservaciones
-          </button>
-          <button className="menu-item logout" onClick={handleLogout}>
-            <FaSignOutAlt /> Cerrar sesión
-          </button>
-        </div>
+      {showHostModal && (
+        <BecomeHostModal onClose={() => setShowHostModal(false)} />
       )}
     </div>
   );

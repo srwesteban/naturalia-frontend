@@ -11,9 +11,18 @@
   background: none;
   border: none;
   cursor: pointer;
+  color: black;
+  margin-top: 0;
+}
+
+.avatar-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar {
+  position: relative;
   background-color: var(--color-secondary);
   color: var(--color-white);
   border-radius: 50%;
@@ -23,6 +32,16 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 1rem;
+}
+
+.role-label-inline {
+  position: absolute;
+  bottom: -1.1rem;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #777;
+  text-transform: uppercase;
 }
 
 .menu-lines {
@@ -36,7 +55,7 @@
   right: 0;
   background-color: var(--color-white);
   border: 1px solid #ddd;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   width: 200px;
   z-index: 1000;

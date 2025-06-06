@@ -3,8 +3,10 @@ import "../../styles/components/CreateStayForm.css";
 import { uploadImageToCloudinary } from "../../services/cloudinary";
 import { getFeatures } from "../../services/featureService";
 import { getCategories } from "../../services/categoryService";
-import { getHosts } from "../../services/userService"; // <-- nuevo
-import { getUserRole } from "../../services/authService"; // <-- nuevo
+import { getHosts } from "../../services/userService";
+import { getUserRole } from "../../services/authService";
+import MapOnly from "../Location/MapOnly";
+import LocationManualInput from "../../components/Location/LocationManualInput";
 
 const initialForm = {
   name: "",
@@ -33,12 +35,14 @@ const CreateStayForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [showMapModal, setShowMapModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     getFeatures().then(setFeatures).catch(console.error);
     getCategories().then(setCategories).catch(console.error);
 
-    const role = getUserRole(); 
+    const role = getUserRole();
     setRole(role);
 
     if (role === "ADMIN") {
@@ -80,6 +84,21 @@ const CreateStayForm = () => {
     setErrorMsg("");
     setSuccessMsg("");
 
+    // Validaciones personalizadas
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = "El nombre es obligatorio.";
+    if (!form.location.trim())
+      newErrors.location = "La ubicación es obligatoria.";
+    if (form.pricePerNight <= 0)
+      newErrors.pricePerNight = "El precio debe ser mayor a cero.";
+
+    if (Object.keys(newErrors).length > 0) {
+      setFormErrors(newErrors);
+      setLoading(false);
+      return;
+    }
+
+    // Validación de imágenes
     if (files.length < 1 || files.length > 5) {
       setErrorMsg("Debes subir entre 1 y 5 imágenes.");
       setLoading(false);
@@ -119,6 +138,7 @@ const CreateStayForm = () => {
       setFiles([]);
       setSelectedFeatures([]);
       setSelectedCategories([]);
+      setFormErrors({}); // Limpiar errores después de éxito
     } catch (err) {
       setErrorMsg("Error de red o del servidor.");
     } finally {
@@ -135,18 +155,24 @@ const CreateStayForm = () => {
 
       <form onSubmit={handleSubmit}>
         <label>Nombre*</label>
-        <input name="name" value={form.name} onChange={handleChange} required />
-
-        <label>Descripción</label>
-        <textarea
-          name="description"
-          value={form.description}
+        <input
+          name="name"
+          value={form.name}
           onChange={handleChange}
-          rows="4"
+          className={formErrors.name ? "error-input" : ""}
         />
+        {formErrors.name && <p className="field-error">{formErrors.name}</p>}
 
-        <label>Ubicación</label>
-        <input name="location" value={form.location} onChange={handleChange} />
+        <label>Ubicación (país, región, ciudad)*</label>
+        <LocationManualInput
+          value={form.location}
+          onChange={(value) =>
+            setForm((prev) => ({ ...prev, location: value }))
+          }
+        />
+        {formErrors.location && (
+          <p className="field-error">{formErrors.location}</p>
+        )}
 
         <div className="inline">
           <div>
@@ -160,14 +186,21 @@ const CreateStayForm = () => {
             />
           </div>
           <div>
-            <label>Precio / noche (USD)</label>
+            <label>Precio / noche (COP)</label>
             <input
-              type="number"
+              type="text"
               name="pricePerNight"
-              step="0.01"
-              value={form.pricePerNight}
-              onChange={handleChange}
+              value={form.pricePerNight.toLocaleString("es-CO")}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\./g, ""); // elimina puntos
+                const numeric = parseInt(raw, 10) || 0;
+                setForm((prev) => ({ ...prev, pricePerNight: numeric }));
+              }}
+              className={formErrors.pricePerNight ? "error-input" : ""}
             />
+            {formErrors.pricePerNight && (
+              <p className="field-error">{formErrors.pricePerNight}</p>
+            )}
           </div>
         </div>
 
@@ -204,29 +237,6 @@ const CreateStayForm = () => {
           </div>
         </div>
 
-        <div className="inline">
-          <div>
-            <label>Latitud</label>
-            <input
-              type="number"
-              name="latitude"
-              step="0.0001"
-              value={form.latitude}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Longitud</label>
-            <input
-              type="number"
-              name="longitude"
-              step="0.0001"
-              value={form.longitude}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
         {role === "ADMIN" && (
           <div>
             <label>Anfitrión</label>
@@ -253,9 +263,26 @@ const CreateStayForm = () => {
           multiple
           onChange={handleFileChange}
         />
+        <div className="map">
+          <h2>Escoge la ubicación en el mapa</h2>
+          <MapOnly
+            onCoordinatesChange={({ lat, lng }) =>
+              setForm((prev) => ({
+                ...prev,
+                latitude: lat,
+                longitude: lng,
+              }))
+            }
+          />
+          <p>
+            Coordenadas seleccionadas:{" "}
+            <strong>
+              {form.latitude.toFixed(5)}, {form.longitude.toFixed(5)}
+            </strong>
+          </p>
+        </div>
 
         <label>Características</label>
-        <h1></h1>
         <div className="features-checkboxes">
           {features.map((f) => (
             <div key={f.id} className="feature-item">
@@ -272,7 +299,6 @@ const CreateStayForm = () => {
         </div>
 
         <label>Categorías</label>
-        <h1></h1>
         <div className="features-checkboxes">
           {categories.map((c) => (
             <div key={c.id} className="feature-item">
@@ -281,14 +307,7 @@ const CreateStayForm = () => {
                 checked={selectedCategories.includes(c.id)}
                 onChange={() => toggleCategory(c.id)}
               />
-              <div className="feature-label">
-                {/* <img
-                  src={c.imageUrl}
-                  alt={c.title}
-                  style={{ width: 20, marginRight: 5 }}
-                /> */}
-                {c.title}
-              </div>
+              <div className="feature-label">{c.title}</div>
             </div>
           ))}
         </div>

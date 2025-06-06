@@ -1,13 +1,11 @@
 import { Link } from 'react-router-dom';
 import logo from '../../assets/Logo.png';
-import { useAuth } from '../../hooks/useAuth.jsx';
+import { useAuth } from "../../context/AuthContext.jsx";
 import MenuToggle from './MenuToggle';
 import '../../styles/layout/Header.css';
 
 
 const Header = () => {
-  const { user } = useAuth();
-
   return (
     <header className="header">
       <div className="header-content">

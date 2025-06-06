@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { registerUser, loginUser } from '../../services/authService';
-import { useAuth } from '../../hooks/useAuth.jsx';
+import { useAuth } from '../../context/AuthContext';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import '../../styles/components/auth/RegisterForm.css';

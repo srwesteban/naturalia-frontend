@@ -59,17 +59,11 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div className="search-bar">
-      <h2>Encuentra tu próxima estadía</h2>
-      <p>
-        Selecciona las fechas o busca por nombre para ver alojamientos
-        disponibles
-      </p>
-
-      <div className="autocomplete">
+    <div className="search-bar-modern">
+      <div className="search-input-group">
         <input
           type="text"
-          placeholder="Buscar por nombre..."
+          placeholder="¿A dónde vas?"
           value={searchText}
           onChange={handleSearchChange}
           onFocus={() => setShowSuggestions(true)}
@@ -90,28 +84,28 @@ const SearchBar = ({ onSearch }) => {
       </div>
 
       <div
-        className="calendar-toggle"
+        className="search-dates"
         onClick={() => setShowCalendar(!showCalendar)}
       >
-        📅 Seleccionar fechas
+        📅 {dateRange[0].startDate.toLocaleDateString()} -{" "}
+        {dateRange[0].endDate.toLocaleDateString()}
       </div>
-      {showCalendar && (
-        <DateRange
-          editableDateInputs={true}
-          onChange={(item) => setDateRange([item.selection])}
-          moveRangeOnFirstSelection={false}
-          ranges={dateRange}
-          locale={es}
-        />
-      )}
 
-      <button
-        className="search-button"
-        onClick={handleSearch}
-        disabled={loading}
-      >
+      <button className="btn-search" onClick={handleSearch} disabled={loading}>
         {loading ? <span className="spinner"></span> : "Buscar"}
       </button>
+
+      {showCalendar && (
+        <div className="calendar-wrapper">
+          <DateRange
+            editableDateInputs={true}
+            onChange={(item) => setDateRange([item.selection])}
+            moveRangeOnFirstSelection={false}
+            ranges={dateRange}
+            locale={es}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/components/reservation/DateReservation.css";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { getUserId } from "../../services/authService";
 import FakePayModal from "../modals/FakePayModal.jsx";
 

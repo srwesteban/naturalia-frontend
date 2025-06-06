@@ -56,3 +56,18 @@ button {
   align-items: center;
   gap: 0.5rem;
 }
+.map{
+  height: 500px;
+  margin: 2%;
+}
+
+.error-input {
+  border: 2px solid #d32f2f;
+  background: #fff4f4;
+}
+
+.field-error {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}

@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import FavoritesPage from "./pages/FavoritesPages";
 import PoliciesPage from "./pages/PoliciesPage";
 import ReservationsPage from "./pages/ReservationsPage";
+import MapOnly from "./components/Location/MapOnly";
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
           <Route
             path="adminuser"
             element={
-              <ProtectedRoute roles={["ADMIN"]}>
+              <ProtectedRoute roles={["USER"]}>
                 <UserPanel />
               </ProtectedRoute>
             }
@@ -57,6 +58,7 @@ function App() {
           <Route path="adminfeatures" element={<AdminFeaturesPage />} />
           <Route path="admincategory" element={<AdminCategoryPage />} />
           <Route path="reservations" element={<ReservationsPage />} />
+          <Route path="map" element={<MapOnly />} />
         </Routes>
       </main>
       <Footer />

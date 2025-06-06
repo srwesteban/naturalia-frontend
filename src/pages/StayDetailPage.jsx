@@ -8,10 +8,13 @@ import { getUserId } from "../services/authService";
 import ShareModal from "../components/modals/ShareModal";
 import { useAuth } from "../context/AuthContext";
 import ReviewSection from "../components/reviews/ReviewSection";
+import LoginModal from "../components/auth/LoginModal";
 
 const StayDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
+  const [showLoginAlert, setShowLoginAlert] = useState(false);
 
   const { user } = useAuth();
 
@@ -70,9 +73,40 @@ const StayDetail = () => {
         </p>
 
         {!userId && (
-          <p className="login-message">
-            <strong>⚠ Debes iniciar sesión para hacer una reserva.</strong>
-          </p>
+          <>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowLoginAlert(true)}
+            >
+              Reservar
+            </button>
+
+            {showLoginAlert && (
+              <div className="modal-backdrop">
+                <div className="modal-content">
+                    <div className="login-warning">
+                      <strong>⚠ Inicio de sesión obligatorio</strong>
+                      <p>
+                        Debes iniciar sesión para continuar con tu reserva. Si
+                        aún no tienes cuenta, por favor regístrate para poder
+                        hacerlo.
+                      </p>
+                    </div>
+                  <div className="modal-actions">
+                    <button className="btn" onClick={() => setShowLogin(true)}>
+                      Iniciar sesión
+                    </button>
+                    <button
+                      className="btn btn-outline"
+                      onClick={() => setShowLoginAlert(false)}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {userId && <DateReservation stayId={stay.id} userId={userId} />}
@@ -87,9 +121,8 @@ const StayDetail = () => {
       )}
 
       {/* ⭐ Sección de reseñas visible para todos */}
-      {stay && (
-        <ReviewSection stayId={stay.id} />
-      )}
+      {stay && <ReviewSection stayId={stay.id} />}
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 .stay-list-section {
+  max-width: fit-content;
   padding: 1rem 0;
 }
 .stay-list-section h2 {

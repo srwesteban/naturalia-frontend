@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import {
+  getAllUsers,
+  changeUserRole,
+  decodeToken,
+} from "../../services/userService";
 import "../../styles/components/admin/UserPanel.css";
-
-const API_URL = 'http://localhost:8080';
 
 const UserPanel = () => {
   const [users, setUsers] = useState([]);
@@ -9,53 +12,27 @@ const UserPanel = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchUsers();
-    decodeToken();
+    const init = async () => {
+      setLoggedUserId(decodeToken());
+      await loadUsers();
+    };
+    init();
   }, []);
 
-  const decodeToken = () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
+  const loadUsers = async () => {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      setLoggedUserId(payload.userId || payload.id);
-    } catch (err) {
-      console.error("Error al decodificar token:", err);
-    }
-  };
-
-  const fetchUsers = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const res = await fetch(`${API_URL}/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Error al obtener usuarios:", res.status, errorText);
-        return;
-      }
-
-      const data = await res.json();
+      const data = await getAllUsers();
       setUsers(data);
     } catch (err) {
-      console.error("Error inesperado:", err);
+      console.error("Error cargando usuarios:", err);
     }
   };
 
   const handleRoleChange = async (userId, newRole) => {
-    const token = localStorage.getItem("token");
-
     try {
       setLoading(true);
-      await fetch(`${API_URL}/users/${userId}/role?role=${newRole}`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchUsers();
+      await changeUserRole(userId, newRole);
+      await loadUsers();
     } catch (err) {
       console.error("Error al cambiar el rol:", err);
     } finally {
@@ -73,8 +50,10 @@ const UserPanel = () => {
             <div className="user-card" key={user.id}>
               <div className="user-block">
                 <div className="user-block-left">
-                  <p className="user-name">{"Usuario: " + user.firstname} {user.lastname}</p>
-                  <p className="user-email">{"Correo: "+user.email}</p>
+                  <p className="user-name">
+                    Usuario: {user.firstname} {user.lastname}
+                  </p>
+                  <p className="user-email">Correo: {user.email}</p>
                 </div>
                 <div className="user-block-left">
                   <label className="role-label">Permisos / Rol</label>

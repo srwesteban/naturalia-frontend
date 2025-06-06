@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useAuth } from "../../context/AuthContext";
 import "../../styles/components/auth/LoginForm.css";
 
 const initialForm = {
@@ -29,7 +29,7 @@ const LoginForm = ({ onLoginSuccess }) => {
       const res = await loginUser(form);
       login(res.token);
       if (onLoginSuccess) onLoginSuccess();
-      window.location.href = '/';
+      navigate(0);
 
     } catch (err) {
       setErrorMsg("Correo o contraseña incorrectos. Intenta nuevamente.");
