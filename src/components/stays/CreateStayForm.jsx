@@ -7,6 +7,9 @@ import { getHosts } from "../../services/userService";
 import { getUserRole } from "../../services/authService";
 import MapOnly from "../Location/MapOnly";
 import LocationManualInput from "../../components/Location/LocationManualInput";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const initialForm = {
   name: "",
@@ -33,10 +36,8 @@ const CreateStayForm = () => {
   const [hosts, setHosts] = useState([]);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-  const [showMapModal, setShowMapModal] = useState(false);
   const [formErrors, setFormErrors] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     getFeatures().then(setFeatures).catch(console.error);
@@ -81,10 +82,8 @@ const CreateStayForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMsg("");
-    setSuccessMsg("");
+    setFormErrors({});
 
-    // Validaciones personalizadas
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "El nombre es obligatorio.";
     if (!form.location.trim())
@@ -98,9 +97,8 @@ const CreateStayForm = () => {
       return;
     }
 
-    // Validación de imágenes
     if (files.length < 1 || files.length > 5) {
-      setErrorMsg("Debes subir entre 1 y 5 imágenes.");
+      toast.error("Debes subir entre 1 y 5 imágenes.");
       setLoading(false);
       return;
     }
@@ -126,21 +124,42 @@ const CreateStayForm = () => {
       if (!response.ok) {
         const msg = await response.text();
         if (msg === "DUPLICATE_NAME") {
-          setErrorMsg("Ya existe un alojamiento con ese nombre.");
+          toast.error("Ya existe un alojamiento con ese nombre.");
         } else {
-          setErrorMsg("Ocurrió un error inesperado. Intenta de nuevo.");
+          toast.error("Ocurrió un error inesperado. Intenta de nuevo.");
         }
         return;
       }
 
-      setSuccessMsg("¡Alojamiento creado con éxito!");
+      const createdStay = await response.json();
+
+      toast.success(
+        <div>
+          ¡Alojamiento creado con éxito!
+          <button
+            style={{
+              marginLeft: "1rem",
+              backgroundColor: "#f1f1f1", // fondo claro pero no blanco puro
+              color: "#333", // texto oscuro
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              padding: "4px 8px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate(`/stays/${createdStay.id}`)}
+          >
+            Ver alojamiento
+          </button>
+        </div>,
+        { autoClose: 5000 }
+      );
+
       setForm(initialForm);
       setFiles([]);
       setSelectedFeatures([]);
       setSelectedCategories([]);
-      setFormErrors({}); // Limpiar errores después de éxito
     } catch (err) {
-      setErrorMsg("Error de red o del servidor.");
+      toast.error("Error de red o del servidor.");
     } finally {
       setLoading(false);
     }
@@ -149,9 +168,6 @@ const CreateStayForm = () => {
   return (
     <section className="create-stay">
       <h2>Agregar nuevo alojamiento</h2>
-
-      {errorMsg && <p className="error">{errorMsg}</p>}
-      {successMsg && <p className="success">{successMsg}</p>}
 
       <form onSubmit={handleSubmit}>
         <label>Nombre*</label>
@@ -162,6 +178,14 @@ const CreateStayForm = () => {
           className={formErrors.name ? "error-input" : ""}
         />
         {formErrors.name && <p className="field-error">{formErrors.name}</p>}
+
+        <label>Descripción</label>
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          rows="4"
+        />
 
         <label>Ubicación (país, región, ciudad)*</label>
         <LocationManualInput
@@ -192,7 +216,7 @@ const CreateStayForm = () => {
               name="pricePerNight"
               value={form.pricePerNight.toLocaleString("es-CO")}
               onChange={(e) => {
-                const raw = e.target.value.replace(/\./g, ""); // elimina puntos
+                const raw = e.target.value.replace(/\./g, "");
                 const numeric = parseInt(raw, 10) || 0;
                 setForm((prev) => ({ ...prev, pricePerNight: numeric }));
               }}
@@ -263,6 +287,7 @@ const CreateStayForm = () => {
           multiple
           onChange={handleFileChange}
         />
+
         <div className="map">
           <h2>Escoge la ubicación en el mapa</h2>
           <MapOnly
