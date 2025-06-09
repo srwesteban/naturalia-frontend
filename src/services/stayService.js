@@ -63,7 +63,13 @@ export const searchStaysByDate = async (checkIn, checkOut) => {
 };
 
 export const getSuggestions = async (query) => {
-  const response = await fetch(`http://localhost:8080/stays/suggestions?query=${query}`);
+  const response = await fetch(`${API_BASE_URL}/stays/suggestions?query=${query}`);
   if (!response.ok) throw new Error('No se pudieron obtener sugerencias');
   return response.json();
+};
+
+export const getRecommendedStays = async () => {
+  const response = await fetch(`${API_BASE_URL}/stays/recommended`);
+  if (!response.ok) throw new Error("Error al obtener alojamientos recomendados");
+  return await response.json();
 };

@@ -11,7 +11,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  margin: 1%;
+  margin: 0 auto;
 }
 
 .search-input-group,

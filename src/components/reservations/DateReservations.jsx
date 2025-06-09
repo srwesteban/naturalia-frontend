@@ -108,7 +108,7 @@ const DateReservation = ({ stayId, pricePerNight }) => {
     <div className="date-reservation">
       <h4>Reservar fechas</h4>
       <div className="calendar-pair">
-        <div>
+        <div className="picker">
           <label>Llegada:</label>
           <DatePicker
             selected={checkIn}

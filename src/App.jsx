@@ -37,9 +37,9 @@ function App() {
             }
           />{" "}
           <Route
-            path="adminuser"
+            path="adminrol"
             element={
-              <ProtectedRoute roles={["USER"]}>
+              <ProtectedRoute roles={["ADMIN"]}>
                 <UserPanel />
               </ProtectedRoute>
             }

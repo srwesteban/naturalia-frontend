@@ -10,7 +10,6 @@ const Home = () => {
     <main className="home">
       <div className="home-content">
         {/* <SearchBar /> */}
-        {/* <StayRecommendations /> */}
         <StayListSection />
       </div>
     </main>

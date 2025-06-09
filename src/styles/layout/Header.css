@@ -25,15 +25,12 @@
 }
 
 .logo {
-  max-width: 10%;
+  width: auto;
+  max-width: 100px;
   height: auto;
-  margin-right: 10px;
-  box-sizing: border-box;
-  font-size: 100%;
-  bottom: 12px;
-  top: 12px;
-  margin-left: 20px;
+  margin-left: 16px;
 }
+
 
 .slogan {
   font-weight: 600;
@@ -104,7 +101,7 @@
     display: none;
   }
   .logo {
-    max-width: 25%;
+    max-width: 28%;
   }
   .header-content {
     padding: 1%;

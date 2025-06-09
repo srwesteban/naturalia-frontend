@@ -1,40 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { getAllStays } from '../../services/stayService';
-import StayCard from './StayCard';
-import '../../styles/components/stays/StayRecommendations.css';
+import React, { useEffect, useState } from "react";
+import { getRecommendedStays } from "../../services/stayService";
+import StayCardMini from "./StayCardMini";
+import "../../styles/components/stays/StayRecommendations.css";
 
 const StayRecommendations = () => {
   const [stays, setStays] = useState([]);
-  const [showRecommendations, setShowRecommendations] = useState(true); // toggle
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const fetchStays = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getAllStays();
-        const random = [...data].sort(() => 0.5 - Math.random()).slice(0, 4);
-        setStays(random);
+        const data = await getRecommendedStays();
+        setStays(data);
       } catch (err) {
-        console.error(err.message);
+        console.error("Error loading recommendations:", err);
       }
     };
-
-    fetchStays();
+    fetchData();
   }, []);
 
-  return (
-    <section className="recommendations">
-      <h2
-        className="recommendations-title"
-        onClick={() => setShowRecommendations(!showRecommendations)}
-      >
-        Recomendaciones
-        <span className={`arrow ${showRecommendations ? 'close' : ''}`}>&gt;</span>
-      </h2>
+  if (stays.length === 0) return null;
 
-      {showRecommendations && (
-        <div className="stay-grid">
-          {stays.map((stay) => (
-            <StayCard key={stay.id} stay={stay} />
+  return (
+    <section className="stay-recommendations">
+      <div className="stay-recommendations__header">
+        <h3 className="stay-recommendations__title">
+          🏅 Alojamientos Recomendados
+        <button
+          className="stay-recommendations__toggle-btn"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          {open ? "Ocultar" : "Ver"}
+        </button>
+        </h3>
+      </div>
+
+      {open && (
+        <div className="stay-recommendations__scroll">
+          {stays.slice(0, 5).map((stay) => (
+            <StayCardMini key={stay.id} stay={stay} />
           ))}
         </div>
       )}

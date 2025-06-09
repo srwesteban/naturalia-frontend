@@ -6,6 +6,7 @@ import CategoryFilter from "../../components/category/CategoryFilter";
 import SearchBar from "../search/SearchBar";
 import { getUserId } from "../../services/authService";
 import "../../styles/components/stays/StayListSection.css";
+import StayRecommendations from "./StayRecommendatios";
 
 const StayListSection = () => {
   const [allStays, setAllStays] = useState([]);
@@ -92,6 +93,7 @@ const StayListSection = () => {
         onToggle={handleToggleCategory}
         onClear={clearFilters}
       />
+      <StayRecommendations />
       <div className="stay-list-grid">
         {filteredStays.map((stay) => (
           <StayListCard key={stay.id} stay={stay} userId={userId} />

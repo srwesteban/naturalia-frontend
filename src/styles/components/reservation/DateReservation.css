@@ -1,26 +1,105 @@
 .date-reservation {
-  margin-top: 2rem;
-  padding: 1rem;
+  display: contents;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.date-reservation h4 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #222;
 }
 
 .calendar-pair {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+  width: 100%;
+}
+
+.calendar-pair > div {
+  flex: 1;
+  min-width: 150px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.calendar-pair label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.total-price {
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.total-price strong {
+  font-weight: bold;
+  color: black;
 }
 
 .error-message {
-  color: red;
+  color: #c00;
   margin-bottom: 1rem;
+  font-weight: 500;
 }
 
 .reserve-button {
-  padding: 0.5rem 1rem;
-  background-color: black;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--color-secondary);
   color: white;
+  font-weight: bold;
+  font-size: 1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.reserve-button:hover {
+  background-color: #c58a37;
+}
+
+@media (max-width: 600px) {
+  .calendar-pair {
+    flex-direction: column;
+  }
+
+  .date-reservation {
+    padding: 1rem;
+    border-radius: 10px;
+    display: block;
+  }
+
+  .reserve-button {
+    font-size: 1rem;
+  }
 }

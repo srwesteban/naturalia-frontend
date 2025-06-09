@@ -37,7 +37,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 1rem;
 }
 
 .price-block {
@@ -47,12 +47,11 @@
 .price {
   font-weight: bold;
   color: var(--color-black);
-
 }
 
 .stay-info h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   color: var(--color-secondary);
 }
 
@@ -60,6 +59,7 @@
   margin: 0;
   font-size: 0.9rem;
   color: #444;
+  font-size: 1.1rem;
 }
 
 .stay-description {
@@ -102,7 +102,18 @@
     width: 100%;
     padding: 0.75rem;
   }
-  .stay-description{
+
+  .stay-info p {
+    font-size: small;
+  }
+  .stay-info h3 {
+    font-size: medium;
+  }
+  .stay-description {
     display: none;
+  }
+
+  .text-block {
+    gap: 0.5rem;
   }
 }

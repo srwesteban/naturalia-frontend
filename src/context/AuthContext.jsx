@@ -8,6 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [temporaryUserView, setTemporaryUserView] = useState(false);
+
+  const enableUserView = () => setTemporaryUserView(true);
+  const disableUserView = () => setTemporaryUserView(false);
 
   const loadUser = () => {
     const token = localStorage.getItem("token");
@@ -20,6 +24,7 @@ export const AuthProvider = ({ children }) => {
           email: decoded.email,
           role: decoded.role,
           firstName: decoded.firstname || decoded.sub,
+          realRole: decoded.role,
         });
         setIsAuthenticated(true);
       } catch (e) {
@@ -41,18 +46,35 @@ export const AuthProvider = ({ children }) => {
   const login = (token) => {
     if (!token) return;
     localStorage.setItem("token", token);
-    loadUser(); // ✅ recarga el usuario completo del nuevo token
+    loadUser();
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
     setIsAuthenticated(false);
+    setTemporaryUserView(false); // al cerrar sesión, vuelve al rol original
   };
+
+  const effectiveRole =
+    temporaryUserView && user?.role === "HOST" ? "USER" : user?.role;
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, logout, loading, loadUser }}
+      value={{
+        user,
+        setUser,
+        isAuthenticated,
+        setIsAuthenticated,
+        login,
+        logout,
+        loading,
+        loadUser,
+        effectiveRole,
+        temporaryUserView,
+        enableUserView,
+        disableUserView,
+      }}
     >
       {children}
     </AuthContext.Provider>
