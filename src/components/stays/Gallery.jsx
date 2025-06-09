@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/components/stays/Gallery.css'
+import '../../styles/components/stays/Gallery.css';
 import ImageSliderModal from '../modals/ImageSliderModal';
 
 const Gallery = ({ images = [] }) => {
@@ -9,7 +9,7 @@ const Gallery = ({ images = [] }) => {
   if (images.length === 0) return null;
 
   const main = images[0];
-  const others = images.slice(1, 5); // máx 4 adicionales
+  const others = images.slice(1, 5); 
 
   const openSlider = (index = 0) => {
     setCurrentIndex(index);
@@ -25,13 +25,17 @@ const Gallery = ({ images = [] }) => {
       <div className="main-image" onClick={() => openSlider(0)}>
         <img src={main} alt="Main" />
       </div>
-      <div className="side-grid">
-        {others.map((img, i) => (
-          <div key={i} className="grid-img" onClick={() => openSlider(i + 1)}>
-            <img src={img} alt={`Stay ${i + 2}`} />
-          </div>
-        ))}
-      </div>
+
+      {others.length > 0 && (
+        <div className="side-grid">
+          {others.map((img, i) => (
+            <div key={i} className="grid-img" onClick={() => openSlider(i + 1)}>
+              <img src={img} alt={`Stay ${i + 2}`} />
+            </div>
+          ))}
+        </div>
+      )}
+
       <button className="view-more" onClick={() => openSlider(0)}>Ver más</button>
 
       {showSlider && (

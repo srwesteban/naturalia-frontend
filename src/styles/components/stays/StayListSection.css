@@ -1,5 +1,5 @@
 .stay-list-section {
-  max-width: fit-content;
+  width: 100%;
   padding: 1rem 0;
 }
 .stay-list-section h2 {
@@ -41,6 +41,9 @@
 @media (max-width: 768px) {
   .stay-list-grid {
     grid-template-columns: 1fr;
+    padding: 5px;
+    gap: 10px;
+
   }
 }
 .loading-text {

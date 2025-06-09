@@ -11,7 +11,6 @@ const SearchBar = ({ onSearch }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [dateRange, setDateRange] = useState([
     {
       startDate: new Date(),
@@ -85,7 +84,7 @@ const SearchBar = ({ onSearch }) => {
 
       <div
         className="search-dates"
-        onClick={() => setShowCalendar(!showCalendar)}
+        onClick={() => setShowCalendar(true)}
       >
         📅 {dateRange[0].startDate.toLocaleDateString()} -{" "}
         {dateRange[0].endDate.toLocaleDateString()}
@@ -96,14 +95,19 @@ const SearchBar = ({ onSearch }) => {
       </button>
 
       {showCalendar && (
-        <div className="calendar-wrapper">
-          <DateRange
-            editableDateInputs={true}
-            onChange={(item) => setDateRange([item.selection])}
-            moveRangeOnFirstSelection={false}
-            ranges={dateRange}
-            locale={es}
-          />
+        <div className="calendar-overlay" onClick={() => setShowCalendar(false)}>
+          <div className="calendar-wrapper" onClick={(e) => e.stopPropagation()}>
+            <button className="calendar-close-btn" onClick={() => setShowCalendar(false)}>
+              ✕
+            </button>
+            <DateRange
+              editableDateInputs={true}
+              onChange={(item) => setDateRange([item.selection])}
+              moveRangeOnFirstSelection={false}
+              ranges={dateRange}
+              locale={es}
+            />
+          </div>
         </div>
       )}
     </div>

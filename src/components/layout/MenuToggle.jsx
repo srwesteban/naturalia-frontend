@@ -6,12 +6,12 @@ import {
   FaSignOutAlt,
   FaCalendarAlt,
   FaUserPlus,
+  FaBalanceScale,
 } from "react-icons/fa";
 import "../../styles/components/layout/MenuToggle.css";
 import LoginModal from "../auth/LoginModal.jsx";
 import RegisterModal from "../auth/RegisterModal.jsx";
 import BecomeHostModal from "../modals/BecomeHostModal.jsx";
-import { getUserRole } from "../../services/authService";
 
 const MenuToggle = () => {
   const { user, logout } = useAuth();
@@ -29,6 +29,7 @@ const MenuToggle = () => {
   const handleLogout = () => {
     logout();
     setOpen(false);
+    navigate('/')
     window.location.reload();
   };
 
@@ -80,6 +81,13 @@ const MenuToggle = () => {
                 onClick={() => navigate("/reservations")}
               >
                 <FaCalendarAlt /> Mis Reservaciones
+              </button>
+
+                         <button
+                className="menu-item"
+                onClick={() => navigate("/policies")}
+              >
+                <FaBalanceScale /> Politicas de uso
               </button>
               {role === "USER" && (
                 <button

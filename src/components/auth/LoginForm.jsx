@@ -14,7 +14,7 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // ✅ usamos el contexto directamente
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,7 +30,6 @@ const LoginForm = ({ onLoginSuccess }) => {
       login(res.token);
       if (onLoginSuccess) onLoginSuccess();
       navigate(0);
-
     } catch (err) {
       setErrorMsg("Correo o contraseña incorrectos. Intenta nuevamente.");
     } finally {
@@ -39,40 +38,41 @@ const LoginForm = ({ onLoginSuccess }) => {
   };
 
   return (
-    <section
-      className="login-form"
-      style={{ maxWidth: "400px", margin: "0 auto" }}
-    >
-      <h2 style={{ textAlign: "center" }}>Iniciar sesión</h2>
+    <div className="login-container">
+      <form className="login-form-card" onSubmit={handleSubmit}>
+        <h2>Iniciar sesión</h2>
 
-      {errorMsg && <p className="error">{errorMsg}</p>}
+        {errorMsg && <p className="error">{errorMsg}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          value={form.email}
-          onChange={handleChange}
-        />
+        <div>
+          <label>Correo electrónico</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Ej: juan@gmail.com"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={form.password}
-          onChange={handleChange}
-        />
+        <div>
+          <label>Contraseña</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Tu contraseña"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ marginTop: "16px", width: "100%" }}
-        >
+        <button type="submit" disabled={loading}>
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
       </form>
-    </section>
+    </div>
   );
 };
 

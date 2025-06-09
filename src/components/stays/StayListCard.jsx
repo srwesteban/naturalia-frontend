@@ -42,7 +42,7 @@ const StayListCard = ({ stay, userId, onUnfavorite }) => {
       if (isFavorite) {
         await removeFavorite(userId, stay.id);
         setIsFavorite(false);
-        if (onUnfavorite) onUnfavorite(); // 🔥 Aquí se actualiza la lista
+        if (onUnfavorite) onUnfavorite();
       } else {
         await addFavorite(userId, stay.id);
         setIsFavorite(true);
@@ -76,7 +76,7 @@ const StayListCard = ({ stay, userId, onUnfavorite }) => {
         </div>
         {stay.pricePerNight > 0 && (
           <div className="price-block">
-            <span className="price">${stay.pricePerNight} / noche</span>
+            <span className="price">${stay.pricePerNight.toLocaleString("es-CO")} / noche</span>
           </div>
         )}
       </div>

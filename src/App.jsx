@@ -23,9 +23,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
 
       <Header />
-      <main
-        style={{ flex: 1, minHeight: "100%", margin: "180px", padding: "0" }}
-      >
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<CreateStayForm />} />

@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { getUserId } from "../../services/authService";
 import FakePayModal from "../modals/FakePayModal.jsx";
 
-const DateReservation = ({ stayId }) => {
+const DateReservation = ({ stayId, pricePerNight }) => {
   const navigate = useNavigate();
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
@@ -20,6 +20,7 @@ const DateReservation = ({ stayId }) => {
   const [reservedDates, setReservedDates] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [reservationData, setReservationData] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const handleSubmit = async () => {
     if (!user || user.role !== "USER") {
@@ -39,12 +40,19 @@ const DateReservation = ({ stayId }) => {
 
     try {
       const userId = await getUserId();
+      const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+      const total = days * pricePerNight;
+
       setReservationData({
         stayId,
         userId,
         checkIn: checkIn.toISOString().split("T")[0],
         checkOut: checkOut.toISOString().split("T")[0],
+        stayPricePerNight: pricePerNight,
+        totalPrice: total,
       });
+
+      setTotalPrice(total);
       setShowModal(true);
     } catch (err) {
       setError("Error interno. Intenta de nuevo más tarde.");
@@ -84,6 +92,16 @@ const DateReservation = ({ stayId }) => {
     fetchReservedDates();
   }, [stayId]);
 
+  useEffect(() => {
+    if (checkIn && checkOut && pricePerNight) {
+      const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+      const total = days * pricePerNight;
+      setTotalPrice(total);
+    } else {
+      setTotalPrice(0);
+    }
+  }, [checkIn, checkOut, pricePerNight]);
+
   if (loading) return null;
 
   return (
@@ -118,6 +136,20 @@ const DateReservation = ({ stayId }) => {
         </div>
       </div>
 
+      <p className="total-price">
+        Total a pagar por la estadía:{" "}
+        <strong>$ {totalPrice.toLocaleString("es-CO")}</strong> x{" "}
+        {checkIn && checkOut
+          ? Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24))
+          : 0}{" "}
+        noche
+        {checkOut &&
+        checkIn &&
+        Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24)) > 1
+          ? "s"
+          : ""}
+      </p>
+
       {error && <p className="error-message">{error}</p>}
 
       <button onClick={handleSubmit} className="reserve-button">
@@ -128,6 +160,10 @@ const DateReservation = ({ stayId }) => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onSuccess={handleSuccess}
+        totalPrice={totalPrice.toLocaleString("es-CO")}
+        pricePerNight={pricePerNight}
+        checkIn={checkIn?.toISOString().split("T")[0]}
+        checkOut={checkOut?.toISOString().split("T")[0]}
       />
     </div>
   );

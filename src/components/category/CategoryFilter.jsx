@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/components/home/CategoryFilter.css";
 
 const CategoryFilter = ({
@@ -7,10 +7,20 @@ const CategoryFilter = ({
   onToggle = () => {},
   onClear = () => {},
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <section className="category-filter-bar">
-      <h2>Filtrar por categoria</h2>
-      <div className="chips-container">
+      <div className="mobile-toggle">
+        <button className="toggle-btn" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? "Ocultar categorias ▲" : "Mostrar categorias ▼"}
+        </button>
+      </div>
+
+      <div className={`chips-container ${isOpen ? "show" : ""}`}>
+        <div className="category-title">
+          <h2>Filtrar por categoria:</h2>
+        </div>
         {categories.map((cat) => (
           <button
             key={cat.id}
@@ -24,7 +34,7 @@ const CategoryFilter = ({
                 className="chip-icon"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "/icons/default-category.svg"; // ruta del ícono genérico
+                  e.target.src = "/icons/default-category.svg";
                 }}
               />
             ) : (

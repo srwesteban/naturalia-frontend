@@ -7,7 +7,7 @@
 .footer-content {
   padding: 0 10%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .footer-left {
@@ -30,9 +30,11 @@
   .footer {
     flex-direction: column;
     text-align: center;
+    padding-bottom: 55px;
   }
 
   .footer-left {
     justify-content: center;
+    gap: 1rem;
   }
 }

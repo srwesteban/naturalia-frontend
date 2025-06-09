@@ -1,37 +1,69 @@
 :root {
-  --color-primary: rgb(218, 188, 134);     /* beige */
-  --color-secondary: #858B66;     /* verde oscuro */
-  --color-accent: rgb(108, 188, 140);      /* verde menta */
+  --color-primary: rgb(218, 188, 134);
+  --color-secondary: #858b66;
+  --color-accent: rgb(108, 188, 140);
   --color-white: #fff;
   --color-black: #111;
   --color-text: #1f1f1f;
-  --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-body {
-  font-family: var(--font-main);
-  background-color: var(--color-white);
-  color: var(--color-text);
-  margin: 0;
-  padding: 0;
-}
-
-
-html, body, #root {
-  width: 100%;
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 body {
+  background-image: url('../assets/fondo.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: #ffffff;
+  font-family: var(--font-main);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
+
 }
 
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  padding: 20px;
+  text-align: center;
+}
+
+.main-content {
+  padding-top: 100px;
+  padding-left: 16px;
+  padding-right: 16px;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+
+  body {
+    background-image: url('../assets/fondo2.png');
+    background-repeat: repeat-y;
+    background-size: cover;
+    background-position: center top;
+    background-attachment: scroll;
+  }
+  .main-content {
+    padding-top: 80px;
+  }
 }

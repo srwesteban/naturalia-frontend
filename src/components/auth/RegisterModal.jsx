@@ -1,6 +1,6 @@
 import React from 'react';
 import RegisterForm from '../auth/RegisterForm';
-import '../../styles/components/auth/LoginModal.css'; // reutilizamos el estilo del login modal
+import '../../styles/components/auth/LoginModal.css';
 
 const RegisterModal = ({ onClose }) => {
   return (

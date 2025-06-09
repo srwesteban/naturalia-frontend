@@ -139,8 +139,8 @@ const CreateStayForm = () => {
           <button
             style={{
               marginLeft: "1rem",
-              backgroundColor: "#f1f1f1", // fondo claro pero no blanco puro
-              color: "#333", // texto oscuro
+              backgroundColor: "#f1f1f1",
+              color: "#333",
               border: "1px solid #ccc",
               borderRadius: "4px",
               padding: "4px 8px",
