@@ -1,6 +1,7 @@
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const AUTH_URL = `${BASE_URL}/auth`;
 
+// Registro de usuario
 export const registerUser = async (formData) => {
   const response = await fetch(`${AUTH_URL}/register`, {
     method: 'POST',
@@ -10,12 +11,13 @@ export const registerUser = async (formData) => {
 
   if (!response.ok) {
     const msg = await response.text();
-    throw new Error(msg || 'Error en el registro');
+    throw new Error(msg || 'Registration failed');
   }
 
   return await response.json();
 };
 
+// Inicio de sesión
 export const loginUser = async (credentials) => {
   const response = await fetch(`${AUTH_URL}/login`, {
     method: 'POST',
@@ -24,13 +26,14 @@ export const loginUser = async (credentials) => {
   });
 
   if (!response.ok) {
-    throw new Error('Error en el inicio de sesión');
+    const msg = await response.text();
+    throw new Error(msg || 'Login failed');
   }
 
   return await response.json();
 };
 
-// Extrae el rol desde el token almacenado
+// Obtiene el rol desde el token JWT
 export const getUserRole = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
@@ -39,41 +42,42 @@ export const getUserRole = () => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.role || null;
   } catch (err) {
-    console.error("Token inválido", err);
+    console.error("Invalid token", err);
     return null;
   }
 };
 
-// Extrae info básica del usuario desde el token
+// Obtiene datos básicos del usuario desde el token
 export const getUserInfo = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (!token) return null;
 
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const payload = JSON.parse(atob(token.split(".")[1]));
     return {
-      id: payload.id, // Asegúrate de que se incluya en el token
+      id: payload.id,
       role: payload.role,
       firstName: payload.sub,
     };
   } catch (err) {
-    console.error("Token inválido", err);
+    console.error("Invalid token", err);
     return null;
   }
 };
 
+// Obtiene el ID del usuario autenticado desde el backend
 export const getUserId = async () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
 
-  const response = await fetch("http://localhost:8080/auth/me", {
+  const response = await fetch(`${AUTH_URL}/me`, {
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
+      'Authorization': `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
-    throw new Error('No autenticado');
+    throw new Error('Not authenticated');
   }
 
   const data = await response.json();

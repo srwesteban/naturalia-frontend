@@ -1,18 +1,17 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-const ProtectedRoute = ({ children, roles }) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ roles, children }) => {
+  const { isAuthenticated, effectiveRole, loading } = useAuth();
 
-  if (loading) return null; // o <LoadingSpinner />
+  if (loading) return null;
 
-  if (!user) {
-    return <Navigate to="/" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/" />;
   }
 
-  if (roles && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+  if (roles && !roles.includes(effectiveRole)) {
+    return <Navigate to="/" />;
   }
 
   return children;

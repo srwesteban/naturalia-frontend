@@ -9,9 +9,9 @@ const Header = () => {
     <header className="header">
       <div className="header-content">
         <div className="header-left">
-          <Link to="/" className="logo-link">
+          <a href="/" className="logo-link">
             <img src={logo} alt="Naturalia logo" className="logo" />
-          </Link>
+          </a>
         </div>
         <span className="slogan-centered">
           Glampings y Alojamientos Campestres - Reencuéntrate con la naturaleza

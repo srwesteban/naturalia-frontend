@@ -65,7 +65,7 @@ const StayListCard = ({ stay, userId, onUnfavorite }) => {
         )}
       </div>
 
-      <img src={stay.images[0]} alt={stay.name} />
+      <img src={stay.imageUrl} alt={stay.name} />
       <div className="stay-info">
         <div className="text-block">
           <h3>{stay.name}</h3>

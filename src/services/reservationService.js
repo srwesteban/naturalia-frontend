@@ -1,5 +1,6 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Crear una nueva reserva
 export const createReservation = async (data) => {
   const token = localStorage.getItem("token");
 
@@ -27,12 +28,14 @@ export const createReservation = async (data) => {
   return await response.json();
 };
 
+// Obtener reservas de un alojamiento
 export const getReservationsByStay = async (stayId) => {
   const response = await fetch(`${API_URL}/reservations/stay/${stayId}`);
   if (!response.ok) throw new Error("No se pudieron cargar las reservas");
-  return response.json();
+  return await response.json();
 };
 
+// Obtener reservas del usuario autenticado
 export const getMyReservations = async () => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${API_URL}/reservations/mine`, {
@@ -41,21 +44,11 @@ export const getMyReservations = async () => {
     },
   });
   if (!response.ok) throw new Error('No se pudieron cargar tus reservas');
-  return response.json();
+  return await response.json();
 };
 
-export const cancelReservation = async (id) => {
-  const token = localStorage.getItem('token');
-  const response = await fetch(`${API_URL}/reservations/${id}/cancel`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!response.ok) throw new Error('Error al cancelar la reserva');
-  return response.text();
-};
 
+// Eliminar una reserva (hard)
 export const deleteReservation = async (id) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${API_URL}/reservations/${id}`, {
@@ -65,5 +58,5 @@ export const deleteReservation = async (id) => {
     },
   });
   if (!response.ok) throw new Error('Error al eliminar la reserva');
-  return response.text();
+  return await response.text();
 };

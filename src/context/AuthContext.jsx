@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { getUserInfo } from "../services/authService";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -13,12 +13,31 @@ export const AuthProvider = ({ children }) => {
   const enableUserView = () => setTemporaryUserView(true);
   const disableUserView = () => setTemporaryUserView(false);
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    setIsAuthenticated(false);
+    setTemporaryUserView(false);
+    toast.warn("Tu sesión ha expirado. Por favor inicia sesión.");
+    setTimeout(() => {
+      window.location.href = "/"; // o "/login"
+    }, 1500);
+  };
+
   const loadUser = () => {
     const token = localStorage.getItem("token");
+
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("🔐 Token decodificado:", decoded);
+        const expiration = decoded.exp * 1000;
+        const isExpired = Date.now() > expiration;
+
+        if (isExpired) {
+          logout();
+          return;
+        }
+
         setUser({
           name: decoded.firstname || decoded.sub,
           email: decoded.email,
@@ -28,6 +47,7 @@ export const AuthProvider = ({ children }) => {
         });
         setIsAuthenticated(true);
       } catch (e) {
+        console.error("❌ Token inválido:", e.message);
         localStorage.removeItem("token");
         setUser(null);
         setIsAuthenticated(false);
@@ -36,24 +56,35 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
     }
+
     setLoading(false);
   };
 
   useEffect(() => {
     loadUser();
+
+    const interval = setInterval(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          const expiration = decoded.exp * 1000;
+          if (Date.now() > expiration) {
+            logout();
+          }
+        } catch (e) {
+          logout();
+        }
+      }
+    }, 60000); // Revisa cada 60 segundos
+
+    return () => clearInterval(interval);
   }, []);
 
   const login = (token) => {
     if (!token) return;
     localStorage.setItem("token", token);
     loadUser();
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    setIsAuthenticated(false);
-    setTemporaryUserView(false); // al cerrar sesión, vuelve al rol original
   };
 
   const effectiveRole =

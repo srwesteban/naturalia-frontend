@@ -1,30 +1,22 @@
 import React, { useState } from "react";
-import { DateRange } from "react-date-range";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
 import "../../styles/components/search/SearchBar.css";
-import { getSuggestions } from "../../services/stayService.js";
+import { getSuggestions } from "../../services/stayService";
 
 const SearchBar = ({ onSearch }) => {
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [dateRange, setDateRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const handleSearch = async () => {
     setLoading(true);
-    const checkIn = dateRange[0].startDate.toISOString().split("T")[0];
-    const checkOut = dateRange[0].endDate.toISOString().split("T")[0];
-
+    const checkIn = startDate?.toISOString().split("T")[0];
+    const checkOut = endDate?.toISOString().split("T")[0];
     try {
       await onSearch(checkIn, checkOut, searchText);
     } finally {
@@ -71,10 +63,7 @@ const SearchBar = ({ onSearch }) => {
         {showSuggestions && suggestions.length > 0 && (
           <ul className="suggestion-list">
             {suggestions.map((stay) => (
-              <li
-                key={stay.id}
-                onClick={() => handleSuggestionClick(stay.name)}
-              >
+              <li key={stay.id} onClick={() => handleSuggestionClick(stay.name)}>
                 {stay.name}
               </li>
             ))}
@@ -82,34 +71,26 @@ const SearchBar = ({ onSearch }) => {
         )}
       </div>
 
-      <div
-        className="search-dates"
-        onClick={() => setShowCalendar(true)}
-      >
-        📅 {dateRange[0].startDate.toLocaleDateString()} -{" "}
-        {dateRange[0].endDate.toLocaleDateString()}
+      <div className="search-dates">
+        <DatePicker
+          selectsRange
+          startDate={startDate}
+          endDate={endDate}
+          onChange={([start, end]) => {
+            setStartDate(start);
+            setEndDate(end);
+          }}
+          locale={es}
+          dateFormat="dd/MM/yyyy"
+          placeholderText="Selecciona fechas"
+          className="datepicker-input"
+          popperPlacement="bottom"
+        />
       </div>
 
       <button className="btn-search" onClick={handleSearch} disabled={loading}>
         {loading ? <span className="spinner"></span> : "Buscar"}
       </button>
-
-      {showCalendar && (
-        <div className="calendar-overlay" onClick={() => setShowCalendar(false)}>
-          <div className="calendar-wrapper" onClick={(e) => e.stopPropagation()}>
-            <button className="calendar-close-btn" onClick={() => setShowCalendar(false)}>
-              ✕
-            </button>
-            <DateRange
-              editableDateInputs={true}
-              onChange={(item) => setDateRange([item.selection])}
-              moveRangeOnFirstSelection={false}
-              ranges={dateRange}
-              locale={es}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

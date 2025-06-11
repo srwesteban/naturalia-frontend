@@ -60,7 +60,7 @@ const FavoritesPage = () => {
                   id: fav.stayId,
                   name: fav.stayName,
                   location: fav.location,
-                  images: [fav.stayImage],
+                  imageUrl: [fav.stayImage],
                 }}
                 userId={fav.userId}
                 onUnfavorite={() => {

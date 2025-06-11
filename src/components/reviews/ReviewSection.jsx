@@ -50,20 +50,26 @@ const ReviewSection = ({ stayId }) => {
       </div>
 
       <ReviewForm stayId={stayId} onReviewSubmit={handleReviewSubmit} />
-      <h1>Reviews</h1>
+      <h1>Reseñas</h1>
 
-      <div className="review-list">
-        {reviews.map((r, i) => (
-          <div key={i} className="review-item">
-            <div className="review-header">
-              <strong>{r.userName}</strong>
-              <span>{new Date(r.date).toLocaleDateString()}</span>
+      {reviews.length === 0 ? (
+        <p className="no-reviews">
+          Todavía no hay reseñas para este alojamiento.
+        </p>
+      ) : (
+        <div className="review-list">
+          {reviews.map((r, i) => (
+            <div key={i} className="review-item">
+              <div className="review-header">
+                <strong>{r.userName}</strong>
+                <span>{new Date(r.date).toLocaleDateString()}</span>
+              </div>
+              <StarRating rating={r.rating} readOnly={true} />
+              <p>{r.comment}</p>
             </div>
-            <StarRating rating={r.rating} readOnly={true} />
-            <p>{r.comment}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

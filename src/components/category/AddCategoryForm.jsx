@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { createCategory } from '../../services/categoryService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/components/category/AddCategoryForm.css';
 
 const AddCategoryForm = ({ onCategoryCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createCategory({ title, description, imageUrl });
-      setMessage('Categoría creada exitosamente');
+      toast.success('✅ Categoría creada exitosamente');
       setTitle('');
       setDescription('');
       setImageUrl('');
-      if (onCategoryCreated) onCategoryCreated(); // <-- refrescar lista
+      if (onCategoryCreated) onCategoryCreated();
     } catch (err) {
-      setMessage('Error al crear la categoría');
+      toast.error('❌ Error al crear la categoría');
     }
   };
 
@@ -46,7 +47,6 @@ const AddCategoryForm = ({ onCategoryCreated }) => {
         required
       />
       <button type="submit">Crear categoría</button>
-      {message && <p>{message}</p>}
     </form>
   );
 };

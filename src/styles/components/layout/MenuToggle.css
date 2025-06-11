@@ -143,4 +143,15 @@
     margin-right: 20px;
     padding: 8px;
   }
+
+  @media (max-width: 720px) {
+    .role-label-inline {
+      display: fixed;
+      top: -2px;
+      right: -32px;
+    }
+    .avatar{
+      font-size: small;
+    }
+  }
 }

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import "../../styles/components/home/CategoryFilter.css";
+import "../../styles/components/category/CategoryFilter.css";
 
 const CategoryFilter = ({
   categories = [],
   selected = [],
   onToggle = () => {},
   onClear = () => {},
+
 }) => {
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (

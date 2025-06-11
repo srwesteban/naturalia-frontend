@@ -1,6 +1,4 @@
-// src/services/userService.js
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Helpers
 const getToken = () => localStorage.getItem("token");
@@ -35,7 +33,7 @@ export const getAllUsers = async () => {
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return await res.json();
 };
 
 export const getHosts = async () => {
@@ -43,7 +41,7 @@ export const getHosts = async () => {
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error("Error al cargar hosts");
-  return res.json(); // [{id, firstname, lastname}]
+  return await res.json(); // [{id, firstname, lastname}]
 };
 
 // --------------------------------------------------
@@ -65,6 +63,7 @@ export const changeMyRole = async (userId, newRole) => {
 
   const data = await response.json();
 
+  // Actualiza el token en localStorage si el backend devuelve uno nuevo
   if (data.token) {
     localStorage.setItem("token", data.token);
   }
@@ -79,5 +78,5 @@ export const changeUserRole = async (userId, newRole) => {
   });
 
   if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return await res.json();
 };

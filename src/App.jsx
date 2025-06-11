@@ -26,7 +26,14 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/create" element={<CreateStayForm />} />
+          <Route
+            path="/createstay"
+            element={
+              <ProtectedRoute roles={["HOST" , "ADMIN"]}>
+                <CreateStayForm />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/stays/:id" element={<StayDetail />} />
           <Route
             path="/adminstay"
@@ -52,11 +59,38 @@ function App() {
               </ProtectedRoute>
             }
           />{" "}
-          <Route path="policies" element={<PoliciesPage />} />
-          <Route path="adminfeatures" element={<AdminFeaturesPage />} />
-          <Route path="admincategory" element={<AdminCategoryPage />} />
-          <Route path="reservations" element={<ReservationsPage />} />
-          <Route path="map" element={<MapOnly />} />
+          <Route
+            path="policies"
+            element={
+              <ProtectedRoute roles={["USER", "HOST"]}>
+                <PoliciesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="adminfeatures"
+            element={
+              <ProtectedRoute roles={["ADMIN"]}>
+                <AdminFeaturesPage />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path="admincategory"
+            element={
+              <ProtectedRoute roles={["ADMIN"]}>
+                <AdminCategoryPage />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path="reservations"
+            element={
+              <ProtectedRoute roles={["USER"]}>
+                <ReservationsPage />
+              </ProtectedRoute>
+            }
+          />{" "}
         </Routes>
       </main>
       <Footer />

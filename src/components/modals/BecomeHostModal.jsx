@@ -39,11 +39,15 @@ const BecomeHostModal = ({ onClose }) => {
         </p>
         <div className="terms-box">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Al utilizar
-            esta plataforma, te comprometes a cumplir con nuestras políticas de
-            seguridad, limpieza, comunicación, cancelación y reembolso.
-            Asegúrate de ofrecer una experiencia responsable y satisfactoria
-            para todos los usuarios.
+            Al utilizar esta plataforma como anfitrión, aceptas cumplir con
+            nuestras políticas de seguridad, limpieza, comunicación y reembolso.
+            Te comprometes a proporcionar información veraz sobre tus
+            alojamientos, mantenerlos en condiciones óptimas, respetar los
+            tiempos de reserva y comunicarte de forma clara y oportuna con los
+            huéspedes. Asimismo, entiendes que las cancelaciones injustificadas
+            pueden afectar tu reputación y visibilidad en la plataforma. Tu
+            responsabilidad es garantizar una experiencia segura, honesta y de
+            calidad para todos los usuarios.
           </p>
         </div>
 

@@ -271,11 +271,17 @@ const CreateStayForm = () => {
               required
             >
               <option value="">Selecciona un anfitrión</option>
-              {hosts.map((host) => (
-                <option key={host.id} value={host.id}>
-                  {host.name} ({host.email})
+              {hosts.length > 0 ? (
+                hosts.map((host) => (
+                  <option key={host.id} value={host.id}>
+                    {host.firstname} {host.lastname}
+                  </option>
+                ))
+              ) : (
+                <option disabled value="">
+                  No hay anfitriones disponibles
                 </option>
-              ))}
+              )}
             </select>
           </div>
         )}

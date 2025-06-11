@@ -9,11 +9,14 @@
   font-size: 0.95rem;
 }
 
-.stay-table th,
+.stay-table th{
+    text-align: center;
+
+}
 .stay-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #ddd;
-  text-align: left;
+  text-align: center;
 }
 
 .stay-table th {
@@ -26,4 +29,8 @@
   border: none;
   font-size: 1rem;
   cursor: pointer;
+}
+button {
+  margin: 10px;
+  align-items: end;
 }

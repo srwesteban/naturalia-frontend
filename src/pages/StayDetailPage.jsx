@@ -9,6 +9,8 @@ import ShareModal from "../components/modals/ShareModal";
 import { useAuth } from "../context/AuthContext";
 import ReviewSection from "../components/reviews/ReviewSection";
 import LoginModal from "../components/auth/LoginModal";
+import FeatureList from "../components/features/featureList";
+import MapOnly from "../components/Location/MapOnly";
 
 const StayDetail = () => {
   const { id } = useParams();
@@ -63,18 +65,42 @@ const StayDetail = () => {
           <div className="detail-info">
             <p className="description">{stay.description}</p>
             <ul className="info-list">
-              <li><strong>Ubicación:</strong> {stay.location}</li>
-              <li><strong>Capacidad:</strong> {stay.capacity} personas</li>
-              <li><strong>Precio:</strong> ${stay.pricePerNight.toLocaleString("es-CO")} / noche</li>
-              <li><strong>Número de camas:</strong> {stay.beds}</li>
-              <li><strong>Habitaciones:</strong> {stay.bedrooms}</li>
-              <li><strong>Baños:</strong> {stay.bathrooms}</li>
-              <li><strong>Anfitrión:</strong> {stay.host.firstname}</li>
+              <li>
+                <strong>Ubicación:</strong> {stay.location}
+              </li>
+              <li>
+                <strong>Capacidad:</strong> {stay.capacity} personas
+              </li>
+              <li>
+                <strong>Precio:</strong> $
+                {stay.pricePerNight.toLocaleString("es-CO")} / noche
+              </li>
+              <li>
+                <strong>Número de camas:</strong> {stay.beds}
+              </li>
+              <li>
+                <strong>Habitaciones:</strong> {stay.bedrooms}
+              </li>
+              <li>
+                <strong>Baños:</strong> {stay.bathrooms}
+              </li>
+              <li>
+                <strong>Anfitrión:</strong> {stay.host.firstname}
+              </li>
             </ul>
+
+            <div className="mapa">
+              <label>Ubicacion geografica:</label>
+              <h1></h1>
+              <MapOnly latitude={stay.latitude} longitude={stay.longitude} />
+            </div>
 
             {!userId && (
               <>
-                <button className="btn btn-primary" onClick={() => setShowLoginAlert(true)}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowLoginAlert(true)}
+                >
                   Reservar
                 </button>
                 {showLoginAlert && (
@@ -82,11 +108,22 @@ const StayDetail = () => {
                     <div className="modal-content">
                       <div className="login-warning">
                         <strong>⚠ Inicio de sesión obligatorio</strong>
-                        <p>Debes iniciar sesión para continuar con tu reserva. Si aún no tienes cuenta, por favor regístrate para poder hacerlo.</p>
+                        <p>
+                          Debes iniciar sesión para continuar con tu reserva. Si
+                          aún no tienes cuenta, por favor regístrate para poder
+                          hacerlo.
+                        </p>
                       </div>
                       <div className="modal-actions">
-                        <button className="btn" onClick={() => setShowLogin(true)}>Iniciar sesión</button>
-                        <button className="btn btn-outline" onClick={() => setShowLoginAlert(false)}>Cancelar</button>
+                        <button
+                          className="btn"
+                          onClick={() => setShowLogin(true)}
+                        >
+                          Iniciar sesión
+                        </button>
+                        <button onClick={() => setShowLoginAlert(false)}>
+                          Cancelar
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -95,7 +132,11 @@ const StayDetail = () => {
             )}
 
             {userId && (
-              <DateReservation stayId={stay.id} userId={userId} pricePerNight={stay.pricePerNight} />
+              <DateReservation
+                stayId={stay.id}
+                userId={userId}
+                pricePerNight={stay.pricePerNight}
+              />
             )}
 
             <button className="btn-share" onClick={() => setShowShare(true)}>
@@ -105,7 +146,11 @@ const StayDetail = () => {
         </div>
       </section>
 
-      {showShare && <ShareModal stay={stay} onClose={() => setShowShare(false)} />}
+      <FeatureList features={stay.features} />
+
+      {showShare && (
+        <ShareModal stay={stay} onClose={() => setShowShare(false)} />
+      )}
       {stay && <ReviewSection stayId={stay.id} />}
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </div>

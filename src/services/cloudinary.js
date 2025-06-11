@@ -1,20 +1,20 @@
+const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_UPLOAD_URL;
+
+// Sube una imagen a Cloudinary y retorna la URL segura
 export const uploadImageToCloudinary = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "Upload_Images"); // tu preset real
+  formData.append("upload_preset", "Upload_Images");
 
-  const response = await fetch(
-    "https://api.cloudinary.com/v1_1/dy6udvu4e/image/upload",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
+  const response = await fetch(CLOUDINARY_URL, {
+    method: "POST",
+    body: formData,
+  });
 
   if (!response.ok) {
     throw new Error("Error uploading image");
   }
 
   const data = await response.json();
-  return data.secure_url; // esta es la URL final que guardarás en tu backend
+  return data.secure_url;
 };

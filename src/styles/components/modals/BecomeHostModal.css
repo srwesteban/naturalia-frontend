@@ -24,6 +24,8 @@
   margin: 1rem 0;
   max-height: 150px;
   overflow-y: auto;
+  text-align: justify;
+
 }
 
 .checkbox-label {

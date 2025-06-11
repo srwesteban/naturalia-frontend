@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllStays, searchStaysByDate } from "../../services/stayService";
+import { getStayListCards, searchStaysLight } from "../../services/stayService";
 import { getCategories } from "../../services/categoryService";
 import StayListCard from "./StayListCard";
 import CategoryFilter from "../../components/category/CategoryFilter";
@@ -20,9 +20,10 @@ const StayListSection = () => {
     const fetchData = async () => {
       try {
         const [stays, cats] = await Promise.all([
-          getAllStays(),
+          getStayListCards(),
           getCategories(),
         ]);
+
         setAllStays(stays);
         setFilteredStays(stays);
         setCategories(cats);
@@ -46,7 +47,7 @@ const StayListSection = () => {
 
   const handleSearch = async (checkIn, checkOut, name) => {
     try {
-      let filtered = await searchStaysByDate(checkIn, checkOut);
+      let filtered = await searchStaysLight(checkIn, checkOut);
 
       if (name && name.trim().length > 0) {
         const nameLower = name.toLowerCase();
@@ -65,13 +66,20 @@ const StayListSection = () => {
     const updated = selectedCategories.includes(title)
       ? selectedCategories.filter((cat) => cat !== title)
       : [...selectedCategories, title];
+
     setSelectedCategories(updated);
 
-    const filtered = updated.length
-      ? allStays.filter((stay) =>
-          stay.categories?.some((cat) => updated.includes(cat.title))
-        )
-      : allStays;
+    if (updated.length === 0) {
+      setFilteredStays(allStays);
+      return;
+    }
+
+    const filtered = allStays.filter((stay) => {
+      const match = stay.categories?.some((cat) =>
+        updated.includes(cat.title || cat.name)
+      );
+      return match;
+    });
 
     setFilteredStays(filtered);
   };
@@ -83,6 +91,7 @@ const StayListSection = () => {
 
   return (
     <div className="stay-list-section">
+
       {isLoading && (
         <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>
       )}

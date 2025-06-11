@@ -1,43 +1,35 @@
-.date-reservation {
-  display: contents;
+.reservation-box {
   border: 1px solid #ddd;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  margin-top: 2rem;
+  width: 100%;               /* 🔹 OCUPA TODO EL ANCHO DISPONIBLE */
   box-sizing: border-box;
-  overflow-x: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 20px;
 }
 
-.date-reservation h4 {
-  margin-bottom: 1rem;
+.reservation-title {
   font-size: 1.2rem;
-  font-weight: bold;
-  color: #222;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-.calendar-pair {
+.picker-group {
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
-  width: 100%;
 }
 
-.calendar-pair > div {
+.picker-column {
   flex: 1;
-  min-width: 150px;
-  max-width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.calendar-pair label {
-  display: block;
-  font-weight: 500;
+.picker-column label {
   margin-bottom: 4px;
-  color: #444;
+  font-weight: 500;
 }
 
 .react-datepicker-wrapper,
@@ -47,59 +39,38 @@
 
 .react-datepicker__input-container input {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.6rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
+  background: white;
   box-sizing: border-box;
 }
 
-.total-price {
-  margin: 1rem 0;
-  font-size: 1rem;
-  color: #333;
-}
-
-.total-price strong {
-  font-weight: bold;
-  color: black;
-}
-
-.error-message {
-  color: #c00;
+.reservation-summary {
   margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.reservation-error {
+  color: #235723;
   font-weight: 500;
+  margin-top: 0.5rem;
 }
 
 .reserve-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--color-secondary);
-  color: white;
-  font-weight: bold;
   font-size: 1rem;
+  background-color: #ff5a5f;
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
 .reserve-button:hover {
-  background-color: #c58a37;
-}
-
-@media (max-width: 600px) {
-  .calendar-pair {
-    flex-direction: column;
-  }
-
-  .date-reservation {
-    padding: 1rem;
-    border-radius: 10px;
-    display: block;
-  }
-
-  .reserve-button {
-    font-size: 1rem;
-  }
+  background-color: #e04848;
 }

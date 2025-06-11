@@ -3,7 +3,7 @@ import "../styles/pages/AdminPanelPage.css";
 import {
   getStaySummaries,
   deleteStayById,
-  updateStay,
+  updateStayFull,
   getStayById,
 } from "../services/stayService";
 import StayTable from "../components/stays/StayTable";
@@ -17,6 +17,8 @@ const AdminPanel = () => {
   const [showModal, setShowModal] = useState(false);
   const [stayToDelete, setStayToDelete] = useState(null);
   const [stayToEdit, setStayToEdit] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,19 @@ const AdminPanel = () => {
 
     fetchStays();
   }, []);
+
+  const totalPages = Math.ceil(stays.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentStays = stays.slice(indexOfFirst, indexOfLast);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
 
   const handleEdit = async (id) => {
     try {
@@ -72,7 +87,7 @@ const AdminPanel = () => {
   const handleChangeType = async (id, newType) => {
     try {
       const stay = stays.find((s) => s.id === id);
-      await updateStay(id, { ...stay, type: newType });
+      await updateStayFull(id, { ...stay, type: newType });
       setStays((prev) =>
         prev.map((s) => (s.id === id ? { ...s, type: newType } : s))
       );
@@ -81,10 +96,9 @@ const AdminPanel = () => {
     }
   };
 
-  // Ajuste: Alineamos la firma con EditStayModal
   const handleSaveEdit = async (id, updatedStay) => {
     try {
-      await updateStay(id, updatedStay);
+      await updateStayFull(id, updatedStay);
       setStays((prev) =>
         prev.map((s) => (s.id === id ? { ...s, ...updatedStay } : s))
       );
@@ -109,15 +123,29 @@ const AdminPanel = () => {
     <div className="admin-panel">
       <h2>Panel de Administración</h2>
 
-      <button onClick={() => navigate("/create")} className="add-btn">
+      <button onClick={() => navigate("/createstay")} className="add-btn">
         ➕ Agregar producto
       </button>
+
       <StayTable
-        stays={stays}
+        stays={currentStays}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onChangeType={handleChangeType}
       />
+
+      <div className="pagination-controls">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>
+          ⬅ Anterior
+        </button>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Siguiente ➡
+        </button>
+      </div>
+
       {showModal && (
         <ConfirmDeleteModal
           entityName={stayToDelete?.name}
@@ -126,6 +154,7 @@ const AdminPanel = () => {
           onConfirm={confirmDelete}
         />
       )}
+
       {stayToEdit && (
         <EditStayModal
           stayId={stayToEdit.id}

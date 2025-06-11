@@ -1,5 +1,6 @@
-const API_URL = 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Obtener favoritos por usuario
 export const getFavoritesByUser = async (userId) => {
   try {
     const response = await fetch(`${API_URL}/favorites/user/${userId}`);
@@ -14,8 +15,9 @@ export const getFavoritesByUser = async (userId) => {
   }
 };
 
+// Agregar alojamiento a favoritos
 export const addFavorite = async (userId, stayId) => {
-  const response = await fetch("http://localhost:8080/favorites", {
+  const response = await fetch(`${API_URL}/favorites`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userId, stayId }),
@@ -26,10 +28,10 @@ export const addFavorite = async (userId, stayId) => {
     throw new Error(errorMsg || "No se pudo agregar a favoritos");
   }
 
-  return await response.json(); // ✅ seguro porque ahora el backend sí responde con JSON
+  return await response.json();
 };
 
-
+// Eliminar favorito por usuario y alojamiento
 export const removeFavorite = async (userId, stayId) => {
   try {
     const response = await fetch(`${API_URL}/favorites?userId=${userId}&stayId=${stayId}`, {
