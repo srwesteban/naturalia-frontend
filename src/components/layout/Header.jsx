@@ -13,9 +13,12 @@ const Header = () => {
             <img src={logo} alt="Naturalia logo" className="logo" />
           </a>
         </div>
-        <span className="slogan-centered">
-          Glampings y Alojamientos Campestres - Reencuéntrate con la naturaleza
-        </span>
+        <div className="header-center">
+          <span className="slogan-centered">
+            Glampings y Alojamientos Campestres - Reencuéntrate con la
+            naturaleza
+          </span>
+        </div>
         <div className="header-right">
           <MenuToggle />
         </div>
