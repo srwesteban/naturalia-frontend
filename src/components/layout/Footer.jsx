@@ -1,6 +1,6 @@
 import React from "react";
 import "../../styles/layout/Footer.css";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 import WhatsAppButton from "../../components/whatsapp/WhatsAppButton";
 
 const Footer = () => {
