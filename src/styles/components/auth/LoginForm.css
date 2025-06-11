@@ -57,6 +57,8 @@
   color: var(--color-white);
   cursor: pointer;
   transition: background 0.2s ease;
+  overflow: none;
+  margin: 20px 0;
 }
 
 .login-form-card button:hover {

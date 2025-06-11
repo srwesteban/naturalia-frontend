@@ -1,34 +1,34 @@
-// src/components/reviews/ReviewForm.jsx
-import React, { useState, useEffect } from 'react';
-import StarRating from './StarRating';
-import { postReview } from '../../services/reviewService';
-import { useAuth } from '../../context/AuthContext';
-import '../../styles/components/reviews/ReviewForm.css';
+import React, { useState, useEffect } from "react";
+import StarRating from "./StarRating";
+import { postReview } from "../../services/reviewService";
+import { useAuth } from "../../context/AuthContext";
+import "../../styles/components/reviews/ReviewForm.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ReviewForm = ({ stayId, onReviewSubmit }) => {
   const { user } = useAuth();
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    if (rating === 0 || comment.trim() === '') {
-      setError('Debes escribir un comentario y dar una puntuación.');
+
+    if (rating === 0 || comment.trim() === "") {
+      toast.error("Debes escribir un comentario y dar una puntuación.");
       return;
     }
 
     try {
       await postReview({ stayId, rating, comment });
-      setComment('');
+      setComment("");
       setRating(0);
-      setSuccess('Gracias por tu reseña.');
+      toast.success("Gracias por tu reseña.");
       onReviewSubmit();
     } catch (err) {
-      setError('No se pudo enviar la reseña.');
+      toast.error(err.message || "Solo puedes dejar reseña si alguna vez hiciste una reserva en este alojamiento.");
     }
   };
 

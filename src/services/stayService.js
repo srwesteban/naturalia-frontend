@@ -1,6 +1,8 @@
-import { getUserId } from "./authService"
+import { getUserId } from "./authService";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Obtener token
 const getAuthToken = () => localStorage.getItem("token");
 
 // Fetch autenticado con token si existe
@@ -20,13 +22,15 @@ const authFetch = async (url, options = {}) => {
   return response;
 };
 
-// Obtener todos los alojamientos
+// 🏡 Obtener todos los alojamientos
 export const getAllStays = async () => {
-  const response = await authFetch(`${API_BASE_URL}/stays`, { method: "GET" });
+  const response = await authFetch(`${API_BASE_URL}/stays`, {
+    method: "GET",
+  });
   return await response.json();
 };
 
-// Crear alojamiento
+// 🆕 Crear alojamiento
 export const createStay = async (stayData) => {
   const response = await authFetch(`${API_BASE_URL}/stays`, {
     method: "POST",
@@ -35,7 +39,7 @@ export const createStay = async (stayData) => {
   return await response.json();
 };
 
-// Obtener alojamiento por ID
+// 🔍 Obtener alojamiento por ID
 export const getStayById = async (id) => {
   const response = await authFetch(`${API_BASE_URL}/stays/${id}`, {
     method: "GET",
@@ -43,7 +47,7 @@ export const getStayById = async (id) => {
   return await response.json();
 };
 
-// Obtener resumen de alojamientos
+// 📋 Obtener resumen de alojamientos
 export const getStaySummaries = async () => {
   const response = await authFetch(`${API_BASE_URL}/stays/summary`, {
     method: "GET",
@@ -51,7 +55,7 @@ export const getStaySummaries = async () => {
   return await response.json();
 };
 
-// Actualizar alojamiento
+// ✏️ Actualizar alojamiento
 export const updateStay = async (id, stayData) => {
   const response = await authFetch(`${API_BASE_URL}/stays/${id}`, {
     method: "PUT",
@@ -60,12 +64,14 @@ export const updateStay = async (id, stayData) => {
   return await response.json();
 };
 
-// Eliminar alojamiento
+// 🗑️ Eliminar alojamiento
 export const deleteStayById = async (id) => {
-  await authFetch(`${API_BASE_URL}/stays/${id}`, { method: "DELETE" });
+  await authFetch(`${API_BASE_URL}/stays/${id}`, {
+    method: "DELETE",
+  });
 };
 
-// Buscar alojamientos por fechas (público)
+// 📅 Buscar alojamientos por fechas (público)
 export const searchStaysByDate = async (checkIn, checkOut) => {
   const response = await fetch(
     `${API_BASE_URL}/stays/search?checkIn=${checkIn}&checkOut=${checkOut}`
@@ -74,7 +80,7 @@ export const searchStaysByDate = async (checkIn, checkOut) => {
   return await response.json();
 };
 
-// Buscar alojamientos con respuesta ligera (requiere token)
+// 📦 Buscar alojamientos con respuesta ligera (requiere auth)
 export const searchStaysLight = async (checkIn, checkOut) => {
   const response = await authFetch(
     `${API_BASE_URL}/stays/search-light?checkIn=${checkIn}&checkOut=${checkOut}`
@@ -82,7 +88,7 @@ export const searchStaysLight = async (checkIn, checkOut) => {
   return await response.json();
 };
 
-// Obtener sugerencias para búsqueda (público)
+// 🔍 Obtener sugerencias para búsqueda (público)
 export const getSuggestions = async (query) => {
   const response = await fetch(
     `${API_BASE_URL}/stays/suggestions?query=${query}`
@@ -91,7 +97,7 @@ export const getSuggestions = async (query) => {
   return await response.json();
 };
 
-// Alojamiento destacados/recomendados (público)
+// 🌟 Alojamientos recomendados (público)
 export const getRecommendedStays = async () => {
   const response = await fetch(`${API_BASE_URL}/stays/recommended`);
   if (!response.ok)
@@ -99,7 +105,7 @@ export const getRecommendedStays = async () => {
   return await response.json();
 };
 
-// Obtener tarjetas resumidas para listado (requiere auth)
+// 🪪 Obtener tarjetas resumidas para listado (requiere auth)
 export const getStayListCards = async () => {
   const response = await authFetch(`${API_BASE_URL}/stays/list-cards`, {
     method: "GET",
@@ -107,24 +113,17 @@ export const getStayListCards = async () => {
   return await response.json();
 };
 
+// 🔁 Actualización completa (por ID)
 export const updateStayFull = async (id, data) => {
-  const response = await fetch(`${API_BASE_URL}/stays/${id}/full`, {
+  const response = await authFetch(`${API_BASE_URL}/stays/${id}/full`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
     body: JSON.stringify(data),
   });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Error actualizando alojamiento");
-  }
 
   return true;
 };
 
+// 🧑‍💼 Obtener alojamientos del host autenticado
 export const getMyStays = async () => {
   const userId = await getUserId();
   if (!userId) throw new Error("No se pudo obtener el ID del usuario");

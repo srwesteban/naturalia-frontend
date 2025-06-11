@@ -10,19 +10,20 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserPanel from "./components/admin/UserPanel";
 import AdminFeaturesPage from "./pages/AdminFeaturesPage";
 import AdminCategoryPage from "./pages/AdminCategoryPage";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import FavoritesPage from "./pages/FavoritesPages";
 import PoliciesPage from "./pages/PoliciesPage";
 import ReservationsPage from "./pages/ReservationsPage";
-import MapOnly from "./components/Location/MapOnly";
 import MyStaysPage from "./pages/MyStaysPage";
+import ScrollToTop from "./components/utils/ScrollToTop";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-
+      <ScrollToTop />
       <Header />
       <main className="main-content">
         <Routes>
@@ -30,7 +31,7 @@ function App() {
           <Route
             path="/createstay"
             element={
-              <ProtectedRoute roles={["HOST" , "ADMIN"]}>
+              <ProtectedRoute roles={["HOST", "ADMIN"]}>
                 <CreateStayForm />
               </ProtectedRoute>
             }
@@ -43,25 +44,25 @@ function App() {
                 <AdminPanel />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="adminrol"
+            path="/adminrol"
             element={
               <ProtectedRoute roles={["ADMIN"]}>
                 <UserPanel />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="favorites"
+            path="/favorites"
             element={
               <ProtectedRoute roles={["USER"]}>
                 <FavoritesPage />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="policies"
+            path="/policies"
             element={
               <ProtectedRoute roles={["USER", "HOST"]}>
                 <PoliciesPage />
@@ -69,37 +70,37 @@ function App() {
             }
           />
           <Route
-            path="adminfeatures"
+            path="/adminfeatures"
             element={
               <ProtectedRoute roles={["ADMIN"]}>
                 <AdminFeaturesPage />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="admincategory"
+            path="/admincategory"
             element={
               <ProtectedRoute roles={["ADMIN"]}>
                 <AdminCategoryPage />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="reservations"
+            path="/reservations"
             element={
               <ProtectedRoute roles={["USER"]}>
                 <ReservationsPage />
               </ProtectedRoute>
             }
-          />{" "}
+          />
           <Route
-            path="mystays"
+            path="/mystays"
             element={
               <ProtectedRoute roles={["HOST"]}>
                 <MyStaysPage />
               </ProtectedRoute>
             }
-          />{" "}
+          />
         </Routes>
       </main>
       <Footer />

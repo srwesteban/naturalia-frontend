@@ -1,49 +1,57 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const getAuthToken = () => localStorage.getItem('token');
-
-// Fetch con token de autenticación incluido si existe
-const authFetch = async (url, options = {}) => {
-  const token = getAuthToken();
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+// Obtener token del localStorage
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
   };
-
-  const response = await fetch(url, { ...options, headers });
-  if (!response.ok) {
-    const text = await response.text().catch(() => null);
-    throw new Error(text || `Error ${response.status}`);
-  }
-  return response;
 };
 
-// Obtener todas las características
+// ✅ Obtener todas las características (puede ser público)
 export const getFeatures = async () => {
-  const response = await authFetch(`${API_BASE_URL}/features`, { method: 'GET' });
-  return await response.json();
+  const resp = await fetch(`${API_BASE_URL}/features`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+  if (!resp.ok) throw new Error("No se pudieron cargar las características");
+  return await resp.json();
 };
 
-// Crear nueva característica
+// ✅ Crear nueva característica (solo ADMIN)
 export const createFeature = async (featureData) => {
-  const response = await authFetch(`${API_BASE_URL}/features`, {
-    method: 'POST',
+  const resp = await fetch(`${API_BASE_URL}/features`, {
+    method: "POST",
+    headers: getAuthHeaders(),
     body: JSON.stringify(featureData),
   });
-  return await response.json();
+  if (!resp.ok) throw new Error("Error creando la característica");
+  return await resp.json();
 };
 
-// Actualizar una característica existente
+// ✅ Actualizar una característica (solo ADMIN)
 export const updateFeature = async (id, featureData) => {
-  const response = await authFetch(`${API_BASE_URL}/features/${id}`, {
-    method: 'PUT',
+  const resp = await fetch(`${API_BASE_URL}/features/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
     body: JSON.stringify(featureData),
   });
-  return await response.json();
+  if (!resp.ok) throw new Error("Error actualizando la característica");
+  return await resp.json();
 };
 
-// Eliminar una característica
+// ✅ Eliminar una característica (solo ADMIN)
 export const deleteFeature = async (id) => {
-  await authFetch(`${API_BASE_URL}/features/${id}`, { method: 'DELETE' });
+  const resp = await fetch(`${API_BASE_URL}/features/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!resp.ok) {
+    const errorData = await resp.json().catch(() => null);
+    throw new Error(errorData?.message || "Error eliminando la característica");
+  }
+
+  return true;
 };

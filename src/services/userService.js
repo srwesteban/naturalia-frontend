@@ -1,15 +1,15 @@
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-// Helpers
+// --------------------------------------------------
+// 🔐 AUTH HELPERS
+// --------------------------------------------------
+
 const getToken = () => localStorage.getItem("token");
 
 const authHeaders = () => ({
   Authorization: `Bearer ${getToken()}`,
+  "Content-Type": "application/json",
 });
-
-// --------------------------------------------------
-// 🔐 AUTH
-// --------------------------------------------------
 
 export const decodeToken = () => {
   const token = getToken();
@@ -30,6 +30,7 @@ export const decodeToken = () => {
 
 export const getAllUsers = async () => {
   const res = await fetch(`${API_URL}/users`, {
+    method: "GET",
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error(await res.text());
@@ -38,6 +39,7 @@ export const getAllUsers = async () => {
 
 export const getHosts = async () => {
   const res = await fetch(`${API_URL}/users/hosts`, {
+    method: "GET",
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error("Error al cargar hosts");
@@ -54,16 +56,19 @@ export const changeMyRole = async (userId, newRole) => {
     throw new Error("Rol no permitido. Solo puedes cambiar entre USER y HOST.");
   }
 
-  const response = await fetch(`${API_URL}/users/${userId}/role?role=${newRole}`, {
-    method: "PUT",
-    headers: authHeaders(),
-  });
+  const response = await fetch(
+    `${API_URL}/users/${userId}/role?role=${newRole}`,
+    {
+      method: "PUT",
+      headers: authHeaders(),
+    }
+  );
 
   if (!response.ok) throw new Error(await response.text());
 
   const data = await response.json();
 
-  // Actualiza el token en localStorage si el backend devuelve uno nuevo
+  // Si el backend devuelve un nuevo token (por cambio de rol)
   if (data.token) {
     localStorage.setItem("token", data.token);
   }
@@ -72,10 +77,13 @@ export const changeMyRole = async (userId, newRole) => {
 };
 
 export const changeUserRole = async (userId, newRole) => {
-  const res = await fetch(`${API_URL}/users/${userId}/role?role=${newRole}`, {
-    method: "PUT",
-    headers: authHeaders(),
-  });
+  const res = await fetch(
+    `${API_URL}/users/${userId}/role?role=${newRole}`,
+    {
+      method: "PUT",
+      headers: authHeaders(),
+    }
+  );
 
   if (!res.ok) throw new Error(await res.text());
   return await res.json();
