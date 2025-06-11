@@ -59,7 +59,6 @@ const FavoritesPage = () => {
                 stay={{
                   id: fav.stayId,
                   name: fav.stayName,
-                  location: fav.location,
                   imageUrl: [fav.stayImage],
                 }}
                 userId={fav.userId}

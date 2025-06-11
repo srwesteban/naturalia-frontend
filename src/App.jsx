@@ -16,6 +16,7 @@ import FavoritesPage from "./pages/FavoritesPages";
 import PoliciesPage from "./pages/PoliciesPage";
 import ReservationsPage from "./pages/ReservationsPage";
 import MapOnly from "./components/Location/MapOnly";
+import MyStaysPage from "./pages/MyStaysPage";
 
 function App() {
   return (
@@ -88,6 +89,14 @@ function App() {
             element={
               <ProtectedRoute roles={["USER"]}>
                 <ReservationsPage />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path="mystays"
+            element={
+              <ProtectedRoute roles={["HOST"]}>
+                <MyStaysPage />
               </ProtectedRoute>
             }
           />{" "}

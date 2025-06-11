@@ -1,0 +1,46 @@
+.my-stays-page {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  width: 100%;
+}
+
+.stay-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.stay-card-wrapper {
+  width: 100%;
+  max-width: 360px;
+}
+.stay-card-wrapper button {
+  color: black;
+}
+
+.stay-card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.stay-card-actions button {
+  flex: 1;
+  margin: 0 4px;
+  padding: 6px 10px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.stay-card-actions button:hover {
+  background-color: #ddd;
+}

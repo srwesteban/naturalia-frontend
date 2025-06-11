@@ -80,7 +80,7 @@ const DateReservation = ({ stayId, pricePerNight }) => {
       setReservationData(payload);
       setShowModal(true);
     } catch {
-      setError("Error al procesar la reserva.");
+      setError("Error al procesar la reserva. inicia sesion nuevamente");
     }
   };
 

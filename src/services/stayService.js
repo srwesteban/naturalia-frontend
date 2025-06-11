@@ -1,3 +1,4 @@
+import { getUserId } from "./authService"
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const getAuthToken = () => localStorage.getItem("token");
@@ -122,4 +123,14 @@ export const updateStayFull = async (id, data) => {
   }
 
   return true;
+};
+
+export const getMyStays = async () => {
+  const userId = await getUserId();
+  if (!userId) throw new Error("No se pudo obtener el ID del usuario");
+
+  const response = await authFetch(`${API_BASE_URL}/stays/host/${userId}`, {
+    method: "GET",
+  });
+  return await response.json();
 };

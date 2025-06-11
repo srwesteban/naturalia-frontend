@@ -4,9 +4,9 @@
   padding: 1rem;
 }
 
-
 .reservation-card {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   border: 1px solid #ddd;
   border-left: 6px solid #aaa;
@@ -16,7 +16,6 @@
   align-items: center;
   background: #fff;
   transition: box-shadow 0.2s ease;
-  max-width: 1200px;
 }
 
 .reservation-card:hover {
@@ -37,10 +36,12 @@
   height: 90px;
   object-fit: cover;
   border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .reservation-info {
-  flex-grow: 1;
+  flex: 1 1 250px;
+  min-width: 200px;
 }
 
 .reservation-info .dates,
@@ -61,12 +62,21 @@
   color: #f44336;
 }
 
+.reservation-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
 .reservation-actions button {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .cancel-btn {
@@ -77,4 +87,22 @@
 .delete-btn {
   background-color: #e53935;
   color: white;
+}
+
+/* 📱 Responsivo para móviles */
+@media (max-width: 768px) {
+  .reservation-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stay-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .reservation-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }

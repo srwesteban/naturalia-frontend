@@ -14,6 +14,7 @@ import {
   FaUsersCog,
   FaTools,
   FaThList,
+  FaBuilding,
 } from "react-icons/fa";
 import "../../styles/components/layout/MenuToggle.css";
 import LoginModal from "../auth/LoginModal.jsx";
@@ -134,6 +135,14 @@ const MenuToggle = () => {
                       onClick={() => navigate("/createstay")}
                     >
                       <FaPlusSquare /> Agregar alojamiento
+                    </button>
+                  )}
+                  {effectiveRole === "HOST" && (
+                    <button
+                      className="menu-item"
+                      onClick={() => navigate("/mystays")}
+                    >
+                      <FaBuilding /> Mis alojamientos
                     </button>
                   )}
 
