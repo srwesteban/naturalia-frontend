@@ -5,6 +5,7 @@ import { getFeatures } from "../../services/featureService";
 import { getCategories } from "../../services/categoryService";
 import { getHosts } from "../../services/userService";
 import { getUserRole } from "../../services/authService";
+import { createStay } from "../../services/stayService"; // ✅ CORRECTO
 import MapOnly from "../Location/MapOnly";
 import LocationManualInput from "../../components/Location/LocationManualInput";
 import { toast } from "react-toastify";
@@ -112,26 +113,7 @@ const CreateStayForm = () => {
         categoryIds: selectedCategories,
       };
 
-      const response = await fetch("http://localhost:8080/stays", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const msg = await response.text();
-        if (msg === "DUPLICATE_NAME") {
-          toast.error("Ya existe un alojamiento con ese nombre.");
-        } else {
-          toast.error("Ocurrió un error inesperado. Intenta de nuevo.");
-        }
-        return;
-      }
-
-      const createdStay = await response.json();
+      const createdStay = await createStay(payload);
 
       toast.success(
         <div>
@@ -159,7 +141,11 @@ const CreateStayForm = () => {
       setSelectedFeatures([]);
       setSelectedCategories([]);
     } catch (err) {
-      toast.error("Error de red o del servidor.");
+      if (err.message === "DUPLICATE_NAME") {
+        toast.error("Ya existe un alojamiento con ese nombre.");
+      } else {
+        toast.error("Ocurrió un error inesperado. Intenta de nuevo.");
+      }
     } finally {
       setLoading(false);
     }
