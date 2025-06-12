@@ -15,6 +15,29 @@ const StayListSection = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [userId, setUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
+
+  const totalPages = Math.ceil(filteredStays.length / itemsPerPage);
+  const paginatedStays = filteredStays.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo({ top: -10, behavior: "smooth" });
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo({ top: -10, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +80,7 @@ const StayListSection = () => {
       }
 
       setFilteredStays(filtered);
+      setCurrentPage(1);
     } catch (err) {
       console.error("❌ Error al buscar:", err.message);
     }
@@ -71,6 +95,7 @@ const StayListSection = () => {
 
     if (updated.length === 0) {
       setFilteredStays(allStays);
+      setCurrentPage(1);
       return;
     }
 
@@ -82,16 +107,17 @@ const StayListSection = () => {
     });
 
     setFilteredStays(filtered);
+    setCurrentPage(1);
   };
 
   const clearFilters = () => {
     setSelectedCategories([]);
     setFilteredStays(allStays);
+    setCurrentPage(1);
   };
 
   return (
     <div className="stay-list-section">
-
       {isLoading && (
         <p className="loading-text">🔍 Buscando alojamientos disponibles...</p>
       )}
@@ -103,11 +129,26 @@ const StayListSection = () => {
         onClear={clearFilters}
       />
       <StayRecommendations />
+
       <div className="stay-list-grid">
-        {filteredStays.map((stay) => (
+        {paginatedStays.map((stay) => (
           <StayListCard key={stay.id} stay={stay} userId={userId} />
         ))}
       </div>
+
+      {filteredStays.length > itemsPerPage && (
+        <div className="pagination-controls">
+          <button onClick={goToPrevPage} disabled={currentPage === 1}>
+            ← Anterior
+          </button>
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}>
+            Siguiente →
+          </button>
+        </div>
+      )}
     </div>
   );
 };
