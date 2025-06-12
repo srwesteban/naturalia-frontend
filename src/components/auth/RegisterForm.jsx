@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { registerUser, loginUser } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 import PhoneInput from "react-phone-input-2";
@@ -27,6 +27,17 @@ const RegisterForm = ({ onRegisterSuccess }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const [dots, setDots] = useState(".");
+
+  useEffect(() => {
+    if (!loading) return;
+
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length >= 3 ? "." : prev + "."));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -197,7 +208,7 @@ const RegisterForm = ({ onRegisterSuccess }) => {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Registrando..." : "Registrarse"}
+          {loading ? `Registrando${dots}` : "Registrarse"}
         </button>
       </form>
     </div>

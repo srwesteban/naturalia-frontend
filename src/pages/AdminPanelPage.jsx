@@ -18,6 +18,8 @@ const AdminPanel = () => {
   const [stayToDelete, setStayToDelete] = useState(null);
   const [stayToEdit, setStayToEdit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingStayId, setEditingStayId] = useState(null);
+
   const itemsPerPage = 20;
   const navigate = useNavigate();
 
@@ -58,11 +60,14 @@ const AdminPanel = () => {
   };
 
   const handleEdit = async (id) => {
+    setEditingStayId(id);
     try {
       const detailedStay = await getStayById(id);
       setStayToEdit(detailedStay);
     } catch (err) {
       console.error("Error al cargar detalles del stay:", err);
+    } finally {
+      setEditingStayId(null);
     }
   };
 
@@ -132,6 +137,7 @@ const AdminPanel = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onChangeType={handleChangeType}
+        editingStayId={editingStayId}
       />
 
       <div className="pagination-controls">

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useEffect } from "react";
 import "../../styles/components/auth/LoginForm.css";
 
 const initialForm = {
@@ -15,6 +16,17 @@ const LoginForm = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [dots, setDots] = useState(".");
+
+  useEffect(() => {
+    if (!loading) return;
+
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length >= 3 ? "." : prev + "."));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -69,7 +81,7 @@ const LoginForm = ({ onLoginSuccess }) => {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Ingresando..." : "Ingresar"}
+          {loading ? `Ingresando${dots}` : "Ingresar"}
         </button>
       </form>
     </div>
