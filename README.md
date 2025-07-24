@@ -1,3 +1,5 @@
+#Naturalia backend: https://github.com/srwesteban/naturalia-backend
+--
 # 🌿 Naturalia - Bitácora Técnica
 
 Naturalia es una aplicación web de reservas orientada a alojamientos rurales, como glampings y casas campestres. El sistema permite a usuarios buscar, visualizar y reservar estancias disponibles, así como gestionar favoritos y dejar reseñas. Está desarrollada con un enfoque fullstack utilizando Java Spring Boot para el backend y React + Vite para el frontend, con una arquitectura escalable, segura y responsiva.
